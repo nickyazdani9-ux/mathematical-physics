@@ -4,7 +4,7 @@ Special Functions as Smooth Flows on the Complex Plane
 A complete, self-contained derivation.
 Every step shown. No hidden calculations.
 
-Author: Nick Yazdani & Claude
+Author: Nick Yazdani
 Date: March 2026
 
 ============================================================
