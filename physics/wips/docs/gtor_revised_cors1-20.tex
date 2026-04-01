@@ -1,0 +1,1111 @@
+\documentclass[12pt]{amsart}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\newtheorem{axiom}{Axiom}
+\newtheorem{corollary}{Corollary}
+
+\title{Complex Differential Geometry on the Helical Manifold\\
+Parts I--IV: Single Cell \& Stacked Chain --- Axioms 1--6, Corollaries 1--20\\
+Contraction Integrals Throughout $\cdot$ Leibniz Notation Only}
+
+\author{Nick Navid Yazdani}
+\date{March 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\textit{Provisional Draft --- Not Yet Submitted for Peer Review}
+\end{center}
+
+\section*{Prerequisite Reading}
+
+This paper uses contraction integrals exclusively---no Riemann sums appear anywhere. The
+contraction integral is an alternative geometric framework for integration based on level-set
+contraction and the layer-cake decomposition. Its central tool is inverse duality: for a strictly
+monotone continuous $f$ on $[a,b]$,
+\[
+  \int_a^b f + \int_{f(a)}^{f(b)} f^{-1} = b \cdot f(b) - a \cdot f(a).
+\]
+The companion paper, ``The Contraction Integral: Integration via Level-Set Contraction''
+(Yazdani, 2026), develops this framework from first principles and should be read first.
+
+\begin{abstract}
+Six axioms define a helical 2-manifold embedded as a surface in $\mathbb{R}^3$. From these
+axioms, together with standard differential geometry (explicitly imported where required), we
+obtain: an induced metric with $g^{uu} = \tfrac{1}{2}$ (fixing $c = 1$); a constant gauge
+connection $A_u = 2\pi k$ whose holonomy identifies $k$ as a topological winding number; a
+gauge-diagonalised cone metric; geodesic-derived radial dynamics with an effective potential
+$V(u) = k^2/(2(1+u)^2)$; a proof that local physics is cell-independent; integer-quantised
+angular momentum from the closure condition; a per-mode radial ODE (Euler's equation on the
+cone); and a phase-matching condition $\ell = k$ from holonomy coherence.
+
+The radial ODE admits: interpretation as the separated form of a wave equation on the
+manifold; a scalar first-order factorisation analogous to relativistic factorisation procedures;
+and reduction to a Schr\"odinger-type normal form.
+
+The Laplace--Beltrami operator and wave equation $\Box_M \psi = 0$ are imported from standard
+Riemannian geometry and are not derived from the axioms. Any physical interpretation
+(Klein--Gordon, Dirac, Schr\"odinger analogies) is presented as structural correspondence,
+not equivalence.
+
+All integrals are contraction integrals computed via inverse duality. All derivatives in Leibniz
+notation. One manifold. One parameter.
+\end{abstract}
+
+% ═══════════════════════════════════════════════════════════════
+% SECTION 1: THE SIX AXIOMS
+% ═══════════════════════════════════════════════════════════════
+
+\section{The Six Axioms}
+
+\begin{axiom}[Time is Self-Referential]
+$\dfrac{dt}{dt} = 1.$
+
+This fixes $c = 1$ in natural units. The $z$-axis grows as $z = 1 + u$, with $u \in [0,1]$
+the affine parameter within one cell.
+\end{axiom}
+
+\begin{axiom}[Coupled Radius]
+Radius is derived from the angular variable ($r = \theta/\pi$) and the spiral expands as a
+light cone: $dr/dz = 1$. For one cell:
+\[
+  r(u) = 1 + u.
+\]
+\end{axiom}
+
+\begin{axiom}[Light-Cone Expansion]
+The radial expansion rate equals the speed of light: $dr/dz = 1$. Combined with Axiom~2,
+this couples the transverse radius to the longitudinal coordinate.
+\end{axiom}
+
+\begin{axiom}[Helical Motion]
+\[
+  \theta(u,v) = v + 2\pi k\, u, \qquad k \in \mathbb{Z}^+.
+\]
+The winding number $k$ is the single free geometric parameter.
+\end{axiom}
+
+\begin{axiom}[Reality Embedding]
+\[
+  \mathbf{R}(u,v) = \bigl((1+u)\cos\theta,\; (1+u)\sin\theta,\; u\bigr),
+  \qquad \theta = v + 2\pi k\, u.
+\]
+\end{axiom}
+
+\begin{axiom}[Unitary Closure]
+The spiral closes at integer $z$:
+\[
+  \psi(u, v + 2\pi) = \psi(u,v).
+\]
+This forces every transverse mode to carry integer angular momentum.
+\end{axiom}
+
+% ═══════════════════════════════════════════════════════════════
+% SECTION 2: COROLLARIES (PART I)
+% ═══════════════════════════════════════════════════════════════
+
+\section{Corollaries}
+
+\begin{corollary}[Induced Metric]
+The first fundamental form on $M$ is computed by taking partial derivatives of the embedding
+$\mathbf{R}(u,v)$ with respect to $u$ and $v$, then forming dot products.
+
+The tangent vectors are $\mathbf{R}_u = \partial\mathbf{R}/\partial u$,
+$\mathbf{R}_v = \partial\mathbf{R}/\partial v$.
+
+The metric components $E = \mathbf{R}_u \cdot \mathbf{R}_u$,
+$F = \mathbf{R}_u \cdot \mathbf{R}_v$,
+$G = \mathbf{R}_v \cdot \mathbf{R}_v$ evaluate to:
+\begin{align}
+  E &= 4\pi^2 k^2 (1+u)^2 + 2, \label{eq:E} \\
+  F &= 2\pi k\, (1+u)^2, \label{eq:F} \\
+  G &= (1+u)^2. \label{eq:G}
+\end{align}
+The metric determinant and its square root:
+\[
+  \det(g) = EG - F^2 = 2(1+u)^2, \qquad \sqrt{g} = \sqrt{2}\,(1+u).
+\]
+The inverse metric component:
+\[
+  g^{uu} = \frac{G}{\det(g)} = \frac{(1+u)^2}{2(1+u)^2} = \frac{1}{2}.
+\]
+
+\textit{Derivation.} The embedding gives:
+\[
+  \mathbf{R}_u = \bigl(\cos\theta - (1+u)(2\pi k)\sin\theta,\;
+    \sin\theta + (1+u)(2\pi k)\cos\theta,\; 1\bigr),
+\]
+\[
+  \mathbf{R}_v = \bigl(-(1+u)\sin\theta,\; (1+u)\cos\theta,\; 0\bigr).
+\]
+Computing dot products and applying $\sin^2\theta + \cos^2\theta = 1$:
+\begin{align*}
+  E &= \cos^2\theta + (1+u)^2(2\pi k)^2\sin^2\theta
+       - 2(1+u)(2\pi k)\cos\theta\sin\theta \\
+    &\quad + \sin^2\theta + (1+u)^2(2\pi k)^2\cos^2\theta
+       + 2(1+u)(2\pi k)\sin\theta\cos\theta + 1 \\
+    &= 1 + 4\pi^2 k^2(1+u)^2 + 1 = 4\pi^2 k^2(1+u)^2 + 2.
+\end{align*}
+The cross terms in $\sin\theta\cos\theta$ cancel. Similarly, the cross terms cancel in $F$
+and $G$, yielding the stated results. The determinant follows from direct computation:
+\[
+  EG - F^2 = \bigl(4\pi^2 k^2(1+u)^2 + 2\bigr)(1+u)^2 - 4\pi^2 k^2(1+u)^4 = 2(1+u)^2.
+\]
+
+Verified symbolically via SymPy.
+\end{corollary}
+
+\begin{corollary}[Holonomy --- Winding Number as Topological Charge]
+The off-diagonal metric component divided by the transverse metric component defines a gauge
+connection for the $v$-fibre:
+\[
+  A_u = \frac{F}{G} = \frac{2\pi k\,(1+u)^2}{(1+u)^2} = 2\pi k.
+\]
+
+\textit{Interpretation.} $A_u$ measures how much phase (the $v$-direction) gets dragged per
+step in $u$. Because both $F$ and $G$ scale as $(1+u)^2$, their ratio is constant: the helix
+winds at a uniform rate regardless of where you are in the cell.
+
+The holonomy over one cell:
+\[
+  \Phi_{\mathrm{cell}} = \int_0^1 A_u\, du = \int_0^1 2\pi k\, du = 2\pi k.
+\]
+This is exact: $k$ complete phase cycles per cell. Since $k \in \mathbb{Z}^+$, the phase
+returns to itself ($e^{i \cdot 2\pi k} = 1$), making $k$ a topological invariant---it cannot be
+changed by continuous deformation of the manifold.
+
+The holonomy selects $k$ as the fundamental geometric quantum number of the helix.
+
+Verified symbolically via SymPy.
+\end{corollary}
+
+\begin{corollary}[Christoffel Symbols]
+Computed from the standard formula
+\[
+  \Gamma^i_{jl} = \frac{1}{2} \sum_m g^{im}
+    \left(\frac{\partial g_{mj}}{\partial x^l}
+    + \frac{\partial g_{ml}}{\partial x^j}
+    - \frac{\partial g_{jl}}{\partial x^m}\right),
+\]
+using the metric \eqref{eq:E}--\eqref{eq:G} and its inverse. The six independent symbols are:
+\begin{align}
+  \Gamma^u_{uu} &= -2\pi^2 k^2(u+1), &
+  \Gamma^v_{uu} &= \frac{4\pi k\bigl(\pi^2 k^2 u^2 + 2\pi^2 k^2 u + \pi^2 k^2 + 1\bigr)}{u+1},
+    \label{eq:chris1} \\
+  \Gamma^u_{uv} &= -\pi k\,(u+1), &
+  \Gamma^v_{uv} &= \frac{2\pi^2 k^2 u^2 + 4\pi^2 k^2 u + 2\pi^2 k^2 + 1}{u+1},
+    \label{eq:chris2} \\
+  \Gamma^u_{vv} &= -\frac{u+1}{2}, &
+  \Gamma^v_{vv} &= \pi k\,(u+1). \label{eq:chris3}
+\end{align}
+
+Verified symbolically via SymPy and cross-checked numerically at $u = 1/2$, $k = 1$.
+\end{corollary}
+
+\begin{corollary}[Cell Action via Contraction]
+The action (surface area) of one cell:
+\[
+  S = \int_0^{2\pi} \int_0^1 \sqrt{g}\, du\, dv
+    = 2\pi \int_0^1 \sqrt{2}\,(1+u)\, du.
+\]
+Set $h(u) = \sqrt{2}\,(1+u)$. Then $h(0) = \sqrt{2}$, $h(1) = 2\sqrt{2}$, and
+$h^{-1}(t) = t/\sqrt{2} - 1$.
+
+By inverse duality:
+\[
+  \int_0^1 h(u)\, du = 1 \cdot h(1) - 0 \cdot h(0)
+    - \int_{\sqrt{2}}^{2\sqrt{2}} h^{-1}(t)\, dt
+    = 2\sqrt{2} - \frac{\sqrt{2}}{2} = \frac{3\sqrt{2}}{2}.
+\]
+Therefore:
+\[
+  S = 2\pi \times \frac{3\sqrt{2}}{2} = 3\sqrt{2}\,\pi.
+\]
+
+The action is independent of $k$. The winding number does not affect the surface area of
+the cell.
+
+Verified symbolically via SymPy.
+\end{corollary}
+
+\begin{corollary}[Phase Energy via Geodesic Derivation]
+\textit{Origin of the potential.} The coordinate change $v' = v + 2\pi k u$ removes the
+off-diagonal metric term, yielding the cone metric:
+\[
+  ds^2 = 2\, du^2 + (1+u)^2\, dv'^2.
+\]
+The geodesic equations on this cone are:
+\[
+  \frac{d^2 u}{ds^2} - \frac{(1+u)}{2}\left(\frac{dv'}{ds}\right)^2 = 0,
+  \qquad
+  \frac{d}{ds}\left[(1+u)^2 \frac{dv'}{ds}\right] = 0.
+\]
+The second equation gives conservation of angular momentum:
+$(1+u)^2\, dv'/ds = L = \text{const}$. Substituting $dv'/ds = L/(1+u)^2$ into the first
+equation:
+\[
+  \frac{d^2 u}{ds^2} = \frac{L^2}{2(1+u)^3}.
+\]
+Reducing to first order via $p\, dp/du = d^2 u/ds^2$ and integrating:
+\[
+  p^2 = E_{\mathrm{total}} - \frac{L^2}{2(1+u)^2}.
+\]
+From the metric normalisation $2p^2 + L^2/(1+u)^2 = 1$, the total energy is
+$E_{\mathrm{total}} = 1/2 = g^{uu}$.
+
+The position-dependent term is the geometric potential:
+\[
+  V(u) = \frac{k^2}{2(1+u)^2},
+\]
+where we identify $L = k$ (the angular momentum equals the winding number).
+
+\textit{Integration.} The integrated potential per cell:
+\[
+  E_{\mathrm{phase}} = \int_0^1 \frac{k^2}{2(1+u)^2}\, du.
+\]
+By the layer-cake decomposition, the level width of $V(u) = k^2/(2(1+u)^2)$ (strictly
+decreasing on $[0,1]$) is:
+\[
+  w_V(t) = \begin{cases}
+    1 & 0 \le t < k^2/8, \\
+    \dfrac{k}{\sqrt{2t}} - 1 & k^2/8 \le t \le k^2/2.
+  \end{cases}
+\]
+Contraction integral:
+\[
+  \int_0^{k^2/2} w_V(t)\, dt = \frac{k^2}{8} + \frac{k^2}{8} = \frac{k^2}{4}.
+\]
+\[
+  E_{\mathrm{phase}} = \frac{k^2}{4}.
+\]
+
+\textit{Consistency check:} Integrated kinetic energy + integrated potential
+$= (1/2 - k^2/4) + k^2/4 = 1/2 = g^{uu}$. \checkmark
+
+Verified symbolically via SymPy.
+\end{corollary}
+
+\begin{corollary}[Cell-Independence of the Local Metric]
+\textbf{Statement.} The quantities governing local physics on each cell are independent of
+the cell number $n$.
+
+\textit{Proof.} Parameterise cell $n$ with base radius $a$ (where $a = n+1$ for cell $n$
+in the global chain), so the embedding becomes:
+\[
+  \mathbf{R}_a(u,v) = \bigl((a+u)\cos\theta,\; (a+u)\sin\theta,\; u\bigr),
+  \qquad \theta = v + 2\pi k u.
+\]
+The metric components on this general cell are:
+\[
+  E(a) = 4\pi^2 k^2(a+u)^2 + 2, \quad
+  F(a) = 2\pi k\,(a+u)^2, \quad
+  G(a) = (a+u)^2.
+\]
+These do depend on $a$. However, the physically governing quantities do not:
+
+1. \textit{Gauge connection:}
+\[
+  A_u = \frac{F(a)}{G(a)} = \frac{2\pi k\,(a+u)^2}{(a+u)^2} = 2\pi k.
+  \qquad \text{(independent of $a$)}
+\]
+
+2. \textit{Inverse metric:}
+\[
+  g^{uu} = \frac{G(a)}{\det g(a)} = \frac{(a+u)^2}{2(a+u)^2} = \frac{1}{2}.
+  \qquad \text{(independent of $a$)}
+\]
+
+3. \textit{Gauge-diagonalised metric:} The coordinate change $v' = v + 2\pi k u$ gives
+\[
+  ds^2 = 2\, du^2 + (a+u)^2\, dv'^2
+\]
+on every cell. The wave equation $\Box\psi = 0$ with $\psi = F(u)\, e^{i\ell v'}$ yields
+Euler's ODE:
+\[
+  (a+u)^2 F'' + (a+u) F' - 2\ell^2 F = 0,
+\]
+whose indicial roots $r = \pm\ell\sqrt{2}$ are independent of $a$.
+
+\textit{What does depend on $a$:} The ratio $r(1)/r(0) = (a+1)/a$, which equals 2 only
+when $a = 1$. The transfer matrix trace
+$\mathrm{tr}\, T_\ell = \tfrac{3}{2}\cosh(\ell\sqrt{2}\ln 2)$ uses
+$\ln(w(1)/w(0)) = \ln 2$, which requires $a = 1$.
+
+\textit{Conclusion.} The chain is periodic: each cell resets to $a = 1$, with $u \in [0,1]$
+as a local coordinate. The gauge connection, the inverse metric, and the indicial structure of
+the wave equation are cell-independent. The transfer matrix (derived in later corollaries)
+requires this periodicity to achieve $\det T = 1/2$ and
+$\mathrm{tr}\, T_\ell = \tfrac{3}{2}\cosh(\ell\sqrt{2}\ln 2)$.
+
+Verified symbolically via SymPy.
+\end{corollary}
+
+% ═══════════════════════════════════════════════════════════════
+% SECTION 3: PART II — THE STACKED CHAIN
+% ═══════════════════════════════════════════════════════════════
+
+\section{Part II: The Stacked Chain}
+
+\begin{corollary}[Fourier Decomposition on the Transverse Circle]
+Axiom~6 requires $\psi(u, v + 2\pi) = \psi(u,v)$. A function $e^{i\ell v}$ satisfies this
+if and only if:
+\[
+  e^{i\ell(v + 2\pi)} = e^{i\ell v} \iff e^{2\pi i\ell} = 1 \iff \ell \in \mathbb{Z}.
+\]
+Non-integer values fail: for example, $\ell = 1/2$ gives $e^{i\pi} = -1$, which would
+require $\psi(u, v + 2\pi) = -\psi(u,v)$---a weaker closure condition not permitted by
+Axiom~6.
+
+The general solution on cell $n$ is therefore:
+\[
+  \psi_n(u,v) = \sum_{\ell=-\infty}^{\infty} c_\ell^{(n)}\, f_\ell^{(n)}(u)\, e^{i\ell v},
+  \qquad \ell \in \mathbb{Z}.
+\]
+
+No truncation. The full tower of integer angular momentum modes is present. The quantisation
+of $\ell$ is not imposed---it is forced by the closure condition.
+
+Verified symbolically via SymPy (integer $\ell$ gives $e^{2\pi i\ell} = 1$; half-integer
+gives $-1$).
+\end{corollary}
+
+\begin{corollary}[Per-Mode Radial ODE]
+\textit{Imported machinery.} The Laplace--Beltrami operator is the unique second-order
+differential operator on a Riemannian manifold that is (a)~coordinate-invariant, (b)~self-adjoint,
+and (c)~reduces to the ordinary Laplacian on flat space. It is not derived from the axioms. We
+apply known Riemannian geometry to the metric our axioms produced:
+\[
+  \Box_M \psi = \frac{1}{\sqrt{g}} \frac{\partial}{\partial x^i}
+    \left(\sqrt{g}\, g^{ij} \frac{\partial\psi}{\partial x^j}\right).
+\]
+Two correction factors versus the flat Laplacian: $g^{ij}$ accounts for non-orthogonal
+coordinate directions; $\sqrt{g}$ accounts for varying patch area across the surface.
+
+\textit{In the original $(u,v)$ frame.} Substituting $\psi = f(u)\, e^{i\ell v}$ into
+$\Box_M \psi = 0$ and dividing by $e^{i\ell v}$ yields a second-order ODE for $f(u)$ that
+depends on both $k$ (from the metric) and $\ell$ (from the Fourier mode). The full expression
+is large due to the off-diagonal metric coupling.
+
+\textit{In the gauge-diagonalised frame.} The coordinate change $v' = v + 2\pi k u$ reduces
+the metric to the cone $ds^2 = 2\, du^2 + (1+u)^2\, dv'^2$. The same Laplace--Beltrami
+operator with $\psi = F(u)\, e^{i\ell v'}$ yields Euler's ODE:
+\[
+  (1+u)^2\, F'' + (1+u)\, F' - 2\ell^2\, F = 0.
+\]
+The indicial equation $r^2 = 2\ell^2$ gives roots $r = \pm\ell\sqrt{2}$, and the two linearly
+independent solutions are:
+\[
+  F_1(u) = (1+u)^{\ell\sqrt{2}}, \qquad F_2(u) = (1+u)^{-\ell\sqrt{2}}.
+\]
+
+Verified symbolically via SymPy: both solutions give zero residual when substituted back
+into the ODE.
+\end{corollary}
+
+\begin{corollary}[Phase-Matching Condition --- Mode $\ell = k$]
+Each Fourier mode $e^{i\ell v}$ carries angular momentum $\ell$. The gauge connection
+(Corollary~2) contributes holonomy $2\pi k$ per cell. The relative phase mismatch per cell is:
+\[
+  \delta\varphi_\ell = 2\pi(\ell - k).
+\]
+
+\textit{Resonant mode} ($\ell = k$): $\delta\varphi_k = 0$. The mode propagates coherently
+across cells with no phase drift.
+
+\textit{Non-resonant modes} ($\ell \ne k$): Over $N$ cells the accumulated phase is
+$2\pi N(\ell - k)$. For $N \gg 1$, these contributions destructively interfere and the mode
+decays.
+
+This identifies $\ell = k$ as a natural phase-matching condition: the mode whose angular
+momentum matches the winding number is the one selected by coherence.
+
+\textit{Caveat.} This condition arises from phase alignment, not from a derived dynamical
+suppression law. No claim is made here that non-resonant modes are forbidden---only that they
+fail to propagate coherently across many cells. A rigorous decay estimate (e.g.\ bounding
+$\|T_\ell^N\|$ for $\ell \ne k$) would strengthen this to a derived selection rule, and is
+deferred to later work.
+
+Verified symbolically via SymPy.
+\end{corollary}
+
+\begin{corollary}[Structural Correspondences: Wave Equation, Factorisation, and Normal Form]
+The Euler ODE from Corollary~8,
+\[
+  (1+u)^2\, F'' + (1+u)\, F' - 2\ell^2\, F = 0,
+\]
+admits three algebraic reductions. Each exhibits structural correspondence with a known equation
+of physics. No ansatz is used---only operator algebra and change of dependent variable. The
+correspondences are presented as structural analogies, not claimed equivalences.
+
+\textbf{1. Wave equation structure (Klein--Gordon analogy).} The Euler ODE arises from
+$\Box_M \psi = 0$ after separation of variables. It is the full second-order wave equation on
+the manifold. This provides a Klein--Gordon-type structure, but relies on the imported
+Laplace--Beltrami operator (Corollary~8).
+
+\textbf{2. Scalar first-order factorisation (Dirac analogy).} Define the Euler operator
+$D = (1+u)\, d/du$. Then:
+\[
+  D^2 F = (1+u)\frac{d}{du}\bigl[(1+u)F'\bigr] = (1+u)^2 F'' + (1+u)F'.
+\]
+So the Euler ODE is $D^2 F - 2\ell^2 F = 0$, which factors algebraically:
+\[
+  \bigl(D - \ell\sqrt{2}\bigr)\bigl(D + \ell\sqrt{2}\bigr) F = 0.
+\]
+Each factor is a first-order equation:
+\[
+  (1+u)\, F' + \ell\sqrt{2}\, F = 0, \qquad
+  (1+u)\, F' - \ell\sqrt{2}\, F = 0.
+\]
+Each reproduces one of the two indicial solutions:
+$F = (1+u)^{-\ell\sqrt{2}}$ and $F = (1+u)^{+\ell\sqrt{2}}$ respectively.
+
+\textit{Caveat.} This is a scalar first-order factorisation. It is structurally analogous to
+Dirac's procedure of factoring a second-order operator into first-order pieces, but it does not
+introduce spinors, Clifford algebra, or additional internal degrees of freedom. The analogy is
+algebraic, not physical, until further structure is derived.
+
+\textbf{3. Schr\"odinger-type normal form.} To eliminate the first-derivative term from the
+Euler ODE algebraically, substitute $F = (1+u)^\alpha\, h(u)$ and choose $\alpha$ to kill the
+$h'$ coefficient. The requirement is $2\alpha + 1 = 0$, giving $\alpha = -1/2$. With
+$F = (1+u)^{-1/2}\, h(u)$:
+\[
+  (1+u)^2\, h'' + \left(\tfrac{1}{4} - 2\ell^2\right) h = 0.
+\]
+No $h'$ term remains. Dividing by $-2(1+u)^2$:
+\[
+  -\frac{1}{2}\, h'' + \frac{2\ell^2 - \tfrac{1}{4}}{2(1+u)^2}\, h = 0.
+\]
+This is a Schr\"odinger-type normal form (Sturm--Liouville structure):
+$-\tfrac{1}{2} h'' + V_{\mathrm{eff}}(u)\, h = 0$ with effective potential
+$V_{\mathrm{eff}} = (2\ell^2 - 1/4)/(2(1+u)^2)$, which for $\ell \gg 1$ approaches the
+geodesic potential $\ell^2/(1+u)^2$ from Corollary~5.
+
+\textit{Caveat.} This is a time-independent normal form. It is not yet a full time-dependent
+Schr\"odinger equation; the role of $u$ as an evolution parameter is not formally established
+within the present axioms.
+
+\textbf{4. Coordinate sensitivity: origin of $i$.} In the gauge-diagonalised cone frame, the
+ODE is purely real. In the original $(u,v)$ frame, the inverse metric has $g^{uv} = -\pi k$,
+and the cross-term $g^{uv}\partial_u\partial_v\psi$ introduces imaginary contributions. On the
+mass shell ($\ell = k$), the coefficient of $f'(u)$ separates as:
+\[
+  \mathrm{coeff}(f') = \underbrace{\frac{1}{2(1+u)}}_{\text{real: geometric damping}}
+    - \underbrace{2i\pi k^2}_{\text{imaginary: constant}}.
+\]
+The imaginary part $-2i\pi k^2$ is constant because $g^{uv} = -\pi k$ is constant, and it
+vanishes in the cone frame because the gauge diagonalisation removes $g^{uv}$ entirely.
+
+\textit{Caveat.} This imaginary structure is coordinate-dependent: it is present in the
+$(u,v)$ frame and absent in the $(u,v')$ frame. Its physical significance (if any) remains to
+be established. Both frames describe the same geometry; the $i$ is a feature of the chart, not
+yet shown to be a feature of the physics.
+
+\medskip
+\textbf{Summary.} Three levels of the same equation:
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+Structure & Operation & Result & Status \\
+\hline
+Wave eqn & Full Euler ODE &
+  $(1+u)^2 F'' + (1+u)F' - 2\ell^2 F = 0$ & Imported $\Box_M$ \\
+Factorisation & $(D-r)(D+r)F=0$ & Two first-order equations & Scalar only \\
+Normal form & $F = (1+u)^{-1/2}h$ &
+  $-\tfrac{1}{2}h'' + V_{\mathrm{eff}}\, h = 0$ & Time-indep. \\
+\hline
+\end{tabular}
+\end{center}
+
+Verified symbolically via SymPy: operator factorisation residuals zero; normal-form
+reduction confirmed; $f'$ coefficient splits into real and imaginary parts as stated.
+\end{corollary}
+
+% ═══════════════════════════════════════════════════════════════
+% INTERPRETATION BOUNDARY
+% ═══════════════════════════════════════════════════════════════
+
+\section{Interpretation Boundary}
+
+The present work distinguishes between three categories of result:
+
+\textbf{Derived from axioms and standard differential geometry:}
+Metric $\cdot$ Connection $\cdot$ Holonomy $\cdot$ Christoffel symbols $\cdot$ Geodesics
+$\cdot$ Gaussian curvature $\cdot$ Cell action $\cdot$ Cell-independence $\cdot$ Fourier
+quantisation $\cdot$ Phase-matching condition
+
+\textbf{Imported from standard Riemannian geometry:}
+Laplace--Beltrami operator $\cdot$ Wave equation $\Box_M \psi = 0$
+
+\textbf{Interpretive (structural correspondence, not equivalence):}
+Klein--Gordon analogy $\cdot$ Dirac-like factorisation $\cdot$ Schr\"odinger normal form
+$\cdot$ Phase-matching as ``mass shell'' $\cdot$ Imaginary coefficient as physical $i$
+
+These correspondences are suggestive. Whether any of them can be promoted to physical
+equivalences requires: (a)~a derived identification of $u$ with a physical evolution parameter;
+(b)~an observer or measurement framework; and (c)~predictions that can be tested against
+experiment.
+
+% ═══════════════════════════════════════════════════════════════
+% PART III: INTER-CELL MATCHING AND SPECTRUM
+% ═══════════════════════════════════════════════════════════════
+
+\section*{Part III: Inter-Cell Matching and Spectrum}
+
+\begin{corollary}[Inter-Cell Transfer Matrix]
+At cell junctions, the wave equation $\Box_M \psi = 0$ requires continuity of both the mode
+function and its derivative:
+\[
+  f_\ell^{(n)}(1) = f_\ell^{(n+1)}(0), \qquad
+  \left.\frac{df_\ell^{(n)}}{du}\right|_{u=1}
+    = \left.\frac{df_\ell^{(n+1)}}{du}\right|_{u=0}.
+\]
+
+\textit{Why $C^1$.} The ODE is second-order. A discontinuity in $f'$ at a junction would
+produce a delta function in $f''$, requiring a point source at the boundary. Since no sources
+are postulated, both $f$ and $f'$ must be continuous. Two matching conditions at each junction,
+two linearly independent solutions per cell---the propagation is completely determined by a
+$2 \times 2$ matrix.
+
+\textit{Construction.} From Corollary~8, the gauge-diagonalised cone metric yields Euler's
+equation with solutions $F_1 = (1+u)^p$ and $F_2 = (1+u)^{-p}$, where $p = \ell\sqrt{2}$.
+Their values and derivatives at the cell boundaries are:
+\begin{align*}
+  F_1(0) &= 1, & F_1'(0) &= p, & F_1(1) &= 2^p, & F_1'(1) &= p \cdot 2^{p-1}, \\
+  F_2(0) &= 1, & F_2'(0) &= -p, & F_2(1) &= 2^{-p}, & F_2'(1) &= -p \cdot 2^{-p-1}.
+\end{align*}
+The transfer matrix is built by propagating two canonical initial conditions:
+
+\textit{Column 1} ($f(0)=1$, $f'(0)=0$): $A = B = 1/2$.
+\[
+  f(1) = \frac{2^p + 2^{-p}}{2} = \cosh(p\ln 2), \qquad
+  f'(1) = \frac{p}{2}\sinh(p\ln 2).
+\]
+
+\textit{Column 2} ($f(0)=0$, $f'(0)=1$): $A = 1/(2p)$, $B = -1/(2p)$.
+\[
+  f(1) = \frac{\sinh(p\ln 2)}{p}, \qquad
+  f'(1) = \frac{1}{2}\cosh(p\ln 2).
+\]
+
+Therefore:
+\[
+  T_\ell = \begin{pmatrix}
+    \cosh(p\ln 2) & \dfrac{\sinh(p\ln 2)}{p} \\[8pt]
+    \dfrac{p}{2}\sinh(p\ln 2) & \dfrac{1}{2}\cosh(p\ln 2)
+  \end{pmatrix}, \qquad p = \ell\sqrt{2}.
+\]
+
+\textit{Immediate properties.}
+\[
+  \mathrm{tr}\, T_\ell = \cosh(p\ln 2) + \tfrac{1}{2}\cosh(p\ln 2)
+    = \tfrac{3}{2}\cosh(\ell\sqrt{2}\ln 2).
+\]
+\[
+  \det T_\ell = \tfrac{1}{2}\cosh^2(p\ln 2) - \tfrac{1}{2}\sinh^2(p\ln 2) = \tfrac{1}{2}.
+\]
+The determinant is not unity---it equals
+$\sqrt{g(0)}/\sqrt{g(1)} = \sqrt{2}/(2\sqrt{2}) = 1/2$, recording the metric expansion from
+cell entry to cell exit (Corollary~13 derives this from the Wronskian).
+
+\textit{Degenerate case} ($\ell = 0$): The double root $p = 0$ gives $F_1 = 1$,
+$F_2 = \ln(1+u)$, and:
+\[
+  T_0 = \begin{pmatrix} 1 & \ln 2 \\ 0 & 1/2 \end{pmatrix}.
+\]
+
+\textit{Propagation.} By Corollary~6, each cell has the same local metric, hence the same
+$T_\ell$. After $N$ cells:
+\[
+  \begin{pmatrix} f(N) \\ f'(N) \end{pmatrix}
+    = T_\ell^N \begin{pmatrix} f(0) \\ f'(0) \end{pmatrix}.
+\]
+
+\textit{Riccati perspective.} The substitution $z = F'/F$ converts the Euler ODE to the
+Riccati equation:
+\[
+  \frac{dz}{du} = -z^2 - \frac{z}{1+u} + \frac{2\ell^2}{(1+u)^2}.
+\]
+Under the log coordinate $s = \ln(1+u)$ and the rescaling $Z = (1+u)\, z$, this autonomises to:
+\[
+  \frac{dZ}{ds} = -Z^2 + 2\ell^2,
+\]
+with constant fixed points $Z_\pm = \pm\ell\sqrt{2}$. Both fixed points live in the same
+coordinate---there is no regime transition, no coordinate incompatibility, no special function.
+This is the trivial case of Riccati flow: WKB is exact on the cone because the Euler equation
+has constant coefficients in log coordinates.
+
+The two columns of $T_\ell$ correspond to the two fixed-point trajectories: each solution
+$F = (1+u)^{\pm p}$ follows a single Riccati fixed point from $u = 0$ to $u = 1$ without
+deviation.
+
+\textit{Connection to the special functions framework.} The companion paper ``What Is So
+Special About `Special Functions'?'' (Yazdani, 2026) argues that every classical special
+function is a smooth Riccati flow trajectory connecting two asymptotic regimes with incompatible
+autonomising coordinates. The Euler equation on the cone is the degenerate case: only one
+autonomising coordinate ($\ln w$) is needed, both regimes are compatible, and the flow reduces
+to constant fixed points. No scar forms. The transfer matrix $T_\ell$ is the finite propagator
+of this trivial flow.
+
+\medskip
+\textit{Verification.}
+\begin{itemize}
+\item Symbolic: Residuals of both solutions $F = (1+u)^{\pm\ell\sqrt{2}}$ vanish identically
+  when substituted into the Euler ODE (SymPy).
+\item Numeric spot checks: Residuals exactly 0 across
+  $\ell \in \{1,2,3,5,50\}$, $u \in \{1,2,3,5,50\}$ (SymPy, exact rational arithmetic).
+\item Riccati solver: Autonomous classification recovered; both fixed points identified;
+  no poles on $[0,1]$.
+\item Numerical integration: Solution values, transfer matrix entries, and Riccati flow
+  confirmed to machine precision (scipy, errors $< 10^{-11}$).
+\item Transfer matrix: $\det T_\ell = 1/2$ and
+  $\mathrm{tr}\, T_\ell = \tfrac{3}{2}\cosh(\ell\sqrt{2}\ln 2)$ confirmed for
+  $\ell = 0,1,2,3,5$ (scipy, errors $< 10^{-10}$).
+\end{itemize}
+\end{corollary}
+
+\begin{corollary}[Holonomy Coherence]
+To be promoted to revised standard. \textit{Sketch:} Corollary~9 establishes the phase-matching
+condition $\ell = k$. This corollary formalises the coherence argument: on the mass shell,
+$\delta\varphi_k = 0$ and modes propagate without phase drift; off-shell, accumulated phase
+$2\pi N(\ell - k)$ produces destructive interference for $N \gg 1$.
+\end{corollary}
+
+\begin{corollary}[Wronskian Conservation and $\det T = \tfrac{1}{2}$]
+To be promoted to revised standard. \textit{Sketch:} The Wronskian
+$W(u) = \sqrt{g(u)}\,(f_1 f_2' - f_2 f_1')$ satisfies $dW/du = 0$. Since
+$\sqrt{g(0)} = \sqrt{2}$ and $\sqrt{g(1)} = 2\sqrt{2}$, the transfer matrix determinant is
+$\det T_\ell = \sqrt{g(0)}/\sqrt{g(1)} = 1/2$.
+\end{corollary}
+
+\begin{corollary}[Dispersion Relation]
+To be promoted to revised standard. \textit{Sketch:} Eigenvalues of $T_\ell$ are
+$\lambda_\pm = \tfrac{1}{\sqrt{2}} e^{\pm i\kappa}$. Bloch phase:
+$\cos\kappa = \tfrac{1}{\sqrt{2}}\,\mathrm{tr}\, T_\ell$. Propagating modes:
+$|\mathrm{tr}\, T_\ell| \le \sqrt{2}$. Evanescent modes: $|\mathrm{tr}\, T_\ell| > \sqrt{2}$.
+\end{corollary}
+
+\begin{corollary}[Chain Phase, Action, and Energy]
+To be promoted to revised standard. \textit{Sketch:} Over an $N$-cell chain,
+$\Phi_{\mathrm{total}} = 2\pi k N$, $S_{\mathrm{total}} = 3\sqrt{2}\,\pi N$,
+$E_{\mathrm{total}} = (k^2/4)\, N$. All extensive in $N$.
+\end{corollary}
+
+% ═══════════════════════════════════════════════════════════════
+% PART IV: INTRINSIC FLATNESS AND FIELD EQUATIONS
+% ═══════════════════════════════════════════════════════════════
+
+\section*{Part IV: Intrinsic Flatness and Field Equations}
+
+\begin{corollary}[Gaussian Curvature]
+To be promoted to revised standard. \textit{Sketch:} $K(u) = 0$ for all $u \in [0,1]$ and
+all $k$. The manifold is intrinsically flat---a developable surface. All curvature experienced
+by modes is extrinsic.
+\end{corollary}
+
+\begin{corollary}[Extrinsic Curvature]
+To be promoted to revised standard. \textit{Sketch:} Second fundamental form coefficients
+$L$, $M$, $N$ computed from the unit normal. $LN - M^2 = 0$ confirms $K = 0$ (rank-1,
+developable). Mean curvature $H = \sqrt{2}/(4(1+u))$.
+\end{corollary}
+
+\begin{corollary}[Gauss--Bonnet and Topology]
+To be promoted to revised standard. \textit{Sketch:} $K = 0$ identically
+$\Rightarrow \int K\, dA = 0$. Each cell is an annulus ($\chi = 0$). The topology is trivial.
+\end{corollary}
+
+\begin{corollary}[Maxwell's Equations from Gauge Coupling]
+\textbf{Statement.} In the gauge-diagonalised cone frame, the wave equation $\Box_M \psi = 0$
+is purely real: the Euler ODE for $F(u)$ has no coupling between real and imaginary parts. In
+the original $(u,v)$ frame, the off-diagonal inverse metric $g^{uv} = -\pi k$ reintroduces
+the gauge connection, and the radial ODE acquires complex coefficients. Separating $f = a + ib$
+(where $a = \mathrm{Re}(f)$, $b = \mathrm{Im}(f)$) yields a pair of coupled real equations
+whose cross-coupling has the antisymmetric structure of Maxwell's equations.
+
+\textit{Derivation.} The Laplace--Beltrami operator in the original $(u,v)$ frame, applied to
+$\psi = f(u)\, e^{i\ell v}$ and divided by $e^{i\ell v}$, gives:
+\[
+  \frac{1}{\sqrt{g}} \partial_i\bigl(\sqrt{g}\, g^{ij}\, \partial_j\psi\bigr)
+    \longrightarrow C_2\, f'' + C_1\, f' + C_0\, f = 0,
+\]
+where the coefficients are computed from the four flux contributions
+($g^{uu}\partial_u\partial_u$, $g^{uv}\partial_u\partial_v$, $g^{vu}\partial_v\partial_u$,
+$g^{vv}\partial_v\partial_v$) with each $\partial_v$ replaced by $i\ell$. After clearing the
+denominator $(1+u)^2$:
+\begin{align}
+  C_2 &= \tfrac{1}{2}(1+u)^2, \\
+  C_1 &= \tfrac{1}{2}(1+u) - 2i\pi\ell k\,(1+u)^2, \\
+  C_0 &= \ell\bigl(-2\pi^2\ell k^2(1+u)^2 - \ell - i\pi k(1+u)\bigr).
+\end{align}
+
+On the mass shell $\ell = k$ (Corollary~9), these become:
+\begin{align*}
+  C_2 &= \tfrac{1}{2}(1+u)^2, & &\text{(real)} \\
+  C_1 &= \underbrace{\tfrac{1}{2}(1+u)}_{\text{real: damping}}
+    - \underbrace{2i\pi k^2(1+u)^2}_{\text{imaginary: curl coupling}}, & &\text{(complex)} \\
+  C_0 &= \underbrace{-2\pi^2 k^4(1+u)^2 - k^2}_{\text{real: potential}}
+    - \underbrace{i\pi k^2(1+u)}_{\text{imaginary: source coupling}}. & &\text{(complex)}
+\end{align*}
+
+Dividing through by $C_2 = \tfrac{1}{2}(1+u)^2$ gives the normalised ODE:
+\[
+  f'' + \left(\frac{1}{1+u} - 4i\pi k^2\right) f'
+    + \left(-V - \frac{2i\pi k^2}{1+u}\right) f = 0,
+\]
+where $V = (4\pi^2 k^4(1+u)^2 + 2k^2)/(1+u)^2$ is the effective potential (real).
+
+Define:
+\[
+  \gamma = 4\pi k^2 \quad \text{(constant)}, \qquad
+  \sigma = \frac{2\pi k^2}{1+u} \quad \text{(position-dependent)}.
+\]
+
+\textit{The coupled real system.} Substituting $f = a(u) + i\, b(u)$ and separating real and
+imaginary parts, the single complex ODE splits into:
+\begin{align*}
+  \text{Real equation:} &\quad \mathcal{L}[a] = -\gamma\, b' - \sigma\, b, \\
+  \text{Imaginary equation:} &\quad \mathcal{L}[b] = +\gamma\, a' + \sigma\, a,
+\end{align*}
+where $\mathcal{L}[\,\cdot\,] = (\cdot)'' + \tfrac{1}{1+u}(\cdot)' - V(\cdot)$ is the scalar
+wave operator, identical for both components.
+
+The cross-coupling terms are:
+
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+Coupling & In $\mathcal{L}[a]$ eqn & In $\mathcal{L}[b]$ eqn & Structure \\
+\hline
+First-order (curl) & $-\gamma\, b' = -4\pi k^2 b'$ & $+\gamma\, a' = +4\pi k^2 a'$
+  & Antisymmetric, constant \\
+Zeroth-order (source) & $-\sigma\, b = -\frac{2\pi k^2}{1+u} b$
+  & $+\sigma\, a = +\frac{2\pi k^2}{1+u} a$ & Antisymmetric, decays \\
+\hline
+\end{tabular}
+\end{center}
+
+Both couplings are antisymmetric: the coefficient of $b'$ in the real equation is the negative
+of the coefficient of $a'$ in the imaginary equation, and likewise for $b$ and $a$. This is the
+defining algebraic signature of electromagnetism.
+
+\textit{Recovery of standard Maxwell.} In the flat limit (cone corrections removed:
+$1/(1+u) \to 0$, $V \to \text{const}$, $\sigma \to 0$), the coupled system reduces to:
+\[
+  a'' = -\gamma\, b', \qquad b'' = +\gamma\, a'.
+\]
+Integrating once in $u$ (constant of integration zero for wave solutions):
+\begin{align}
+  \frac{da}{du} &= -\gamma\, b = -4\pi k^2\, b, \label{eq:maxwell1} \\
+  \frac{db}{du} &= +\gamma\, a = +4\pi k^2\, a. \label{eq:maxwell2}
+\end{align}
+Under the identification $a \leftrightarrow E$ (electric field), $b \leftrightarrow B$
+(magnetic field), $u \leftrightarrow z$ (spatial coordinate), these are Maxwell's curl equations
+in vacuum for a monochromatic plane wave propagating in the $z$-direction:
+\[
+  \frac{dE}{dz} = -\omega\, B, \qquad \frac{dB}{dz} = +\omega\, E,
+  \qquad \omega = 4\pi k^2.
+\]
+Differentiating the first and substituting the second gives the wave equation:
+\[
+  \frac{d^2 E}{dz^2} + \omega^2\, E = 0.
+\]
+Phase velocity: $v = \omega/\kappa = 1 = c$, by Axiom~1.
+
+\textit{The Riemann--Silberstein vector.} The complex field $f = a + ib$ is the
+Riemann--Silberstein vector $\mathbf{F} = E + iB$, introduced by Silberstein in 1907 as a
+reformulation of Maxwell's equations into a single complex equation. The present derivation
+inverts this: the helix produces $f$ as a single object; $E$ and $B$ are its real and imaginary
+projections. The Riemann--Silberstein vector is not a mathematical convenience---it is the
+natural field.
+
+\textit{Geometric origin.} The cross-coupling exists because $g^{uv} = -\pi k \ne 0$ in the
+original frame. In the gauge-diagonalised frame ($v' = v + 2\pi k u$), $g^{uv} = 0$ and the
+ODE is purely real---no coupling, no electromagnetism. The gauge transformation that removes
+$A_u$ simultaneously removes the electromagnetic structure.
+
+The three corrections that distinguish Maxwell-on-the-cone from flat-space Maxwell are:
+\begin{enumerate}
+\item \textit{Geometric damping:} $P = 1/(1+u)$. Both $E$ and $B$ have a first-derivative
+  self-term encoding $1/r$ amplitude decay from the expanding cone.
+\item \textit{Effective potential:} $V(u)$. Second-order self-coupling containing the
+  centrifugal term $k^2/(1+u)^2$ and the gauge-squared term $4\pi^2 k^4$.
+\item \textit{Geometric source:} $\sigma = 2\pi k^2/(1+u)$. Position-dependent zeroth-order
+  cross-coupling absent in flat space, encoding how the expanding geometry creates an effective
+  charge density. Antisymmetric: no net monopole.
+\end{enumerate}
+
+\textit{What $\gamma = 4\pi k^2$ means.} The coupling constant is the winding number squared.
+It is $k^2$ because on the mass shell $\ell = k$: one factor of $k$ comes from the metric
+(Axiom~4) and one from the Fourier mode (Corollary~7). Electromagnetic charge is topology.
+
+\textit{Cone frame interpretation.}
+\begin{itemize}
+\item \textit{Gauge-diagonalised frame:} $g^{uv} = 0$. Purely real ODE. No coupling between
+  $a$ and $b$. Pure geometry. No electromagnetism.
+\item \textit{Original frame:} $g^{uv} = -\pi k$. Complex ODE. $a$ and $b$ couple
+  antisymmetrically. Maxwell's equations emerge.
+\end{itemize}
+
+The ``two polarisations of light'' are not fundamental. Light is one helical object
+$f(u)\, e^{i\ell v}$ propagating on the manifold. Electromagnetism is the projection of helical
+geometry onto a real basis.
+
+\textit{Caveat.} This derivation recovers the structural form of Maxwell's equations from the
+wave equation on the helix. The identification $a \leftrightarrow E$, $b \leftrightarrow B$ is
+a structural correspondence: it matches the algebraic signature (antisymmetric first-order
+cross-coupling) and recovers the correct flat-limit equations. Promoting this to a physical
+equivalence requires: (a)~identifying the electromagnetic field strength $F_{\mu\nu}$ with a
+geometric quantity on the manifold; (b)~recovering the Lorentz force law from geodesic deviation;
+and (c)~matching the coupling constant $4\pi k^2$ to the observed electromagnetic coupling
+$e^2/(4\pi\epsilon_0)$. These are deferred to later work.
+
+\textit{Verification.} All coefficients $C_2$, $C_1$, $C_0$ computed symbolically via the
+Laplace--Beltrami operator in SymPy. Real/imaginary splitting confirmed. Antisymmetry of
+cross-coupling verified algebraically. Cone frame limit ($g^{uv} \to 0$) confirmed to
+annihilate all imaginary coefficients. Flat-limit Maxwell equations recovered and verified to
+produce the wave equation with phase velocity $c = 1$. Full computation in
+\texttt{maxwell\_helix\_full.py}.
+\end{corollary}
+
+% ═══════════════════════════════════════════════════════════════
+% COROLLARY 20 — GRAVITY FROM CHAIN CURVATURE
+% ═══════════════════════════════════════════════════════════════
+
+\begin{corollary}[Gravity from Chain Curvature]
+
+\textbf{Statement.}  The intrinsically flat helical manifold ($K=0$) carries no gravitational
+field at the single-cell level.  Gravity emerges on the \emph{coarse-grained} manifold
+obtained by filling in the inter-winding gaps of the stacked chain.  The effective
+4-metric on this manifold inherits a non-vanishing torsion from the helical winding
+structure; the symmetric part of the resulting connection reproduces gravitational
+phenomenology.  The geodesic equations on this manifold reduce to a Riccati equation
+whose flow rate is controlled by $\alpha'(R)$---the derivative of the running fine
+structure constant---identifying gravity as a second-order geometric effect.
+
+\medskip
+\textbf{Coarse-grained coordinates.}  The stacked chain is embedded in a torus of major
+radius~$R$ (cosmological, expanding) and minor radius~$r$ (transverse).  At the
+single-cell level, the coordinates are $(u,v)$ on the flat sheet.  At the coarse-grained
+level, two additional coordinates appear:
+\begin{itemize}
+\item $w$: the inter-winding direction, perpendicular to the sheet within the torus body.
+      Because adjacent windings are offset in $v$, the $w$-direction is not purely radial
+      but carries a helical twist---this is the torsion of the coarse-grained connection.
+\item $R$: the expanding torus radius.  This is the cosmological coordinate, already
+      axiomatic (Axiom~1 fixes $c=1$; the torus expands monotonically).
+\end{itemize}
+The signature of $R$ is timelike: the transfer matrix has $\det(T) = 1/2$ per cell
+(exponential contraction of phase space volume along the chain), while $R$ is expanding.
+These opposing monotonic flows create the signature split $(-,+,+,+)$.
+
+\medskip
+\textbf{Pitch angle from closure.}  On the developed rectangle (width $2\pi r$, height
+$2\pi R$), the helix is a straight line.  A $(p,q)$ helix winds $p$~times around the
+minor circle for every $q$~trips around the major circle.  Closure demands
+$p, q \in \mathbb{Z}$.  The pitch angle satisfies
+\[
+  \tan\theta = \frac{p\, r}{q\, R}.
+\]
+The geometric ratio $1/(14\pi^2) \approx \alpha$ (established in earlier work) identifies
+the pitch angle with the fine structure constant.  For the simplest closure $(p,q)=(1,1)$:
+\[
+  \frac{R}{r} = 14\pi^2 \approx 138.2,
+\]
+placing the torus aspect ratio within the toroidal correction of $1/\alpha_{\mathrm{CODATA}}
+\approx 137.036$.  As $R$ expands, the aspect ratio shifts and the pitch angle runs:
+$\alpha = \alpha(R)$.
+
+\medskip
+\textbf{The effective metric.}  Each piece is derived, not postulated:
+\begin{itemize}
+\item $du^2 + dv^2$: flat sheet ($K=0$, Corollary~16).
+\item $dw^2$: coarse-grained inter-winding direction, constructed from the chain.
+\item $2\alpha(R)\, dv\, dw$: off-diagonal term encoding the helical twist (pitch angle
+      from closure condition).
+\item $-f(R)\, dR^2$: timelike direction; $f(R)$ determined by $\det(T) = 1/2$ scaling
+      with the expanding radius.
+\end{itemize}
+The line element is:
+\[
+  ds^2 = -f(R)\, dR^2 + du^2 + dv^2 + dw^2 + 2\alpha(R)\, dv\, dw.
+\]
+Determinant: $\det(g) = -f(R)(1 - \alpha(R)^2)$.  Inverse metric:
+\[
+  g^{RR} = -\frac{1}{f},\quad g^{uu} = 1,\quad
+  g^{vv} = \frac{-1}{\alpha^2 - 1},\quad
+  g^{vw} = \frac{\alpha}{\alpha^2 - 1},\quad
+  g^{ww} = \frac{-1}{\alpha^2 - 1}.
+\]
+
+\medskip
+\textbf{Christoffel symbols.}  Six independent non-zero components, all involving
+$f'(R)$ or $\alpha'(R)$:
+\begin{align}
+  \Gamma^R_{RR} &= \frac{f'}{2f}, &
+  \Gamma^R_{vw} &= \frac{\alpha'}{2f}, \label{eq:cor20_gamma_key} \\[4pt]
+  \Gamma^v_{Rv} &= \frac{\alpha\, \alpha'}{2(\alpha^2 - 1)}, &
+  \Gamma^v_{Rw} &= \frac{-\alpha'}{2(\alpha^2 - 1)}, \\[4pt]
+  \Gamma^w_{Rv} &= \frac{-\alpha'}{2(\alpha^2 - 1)}, &
+  \Gamma^w_{Rw} &= \frac{\alpha\, \alpha'}{2(\alpha^2 - 1)}.
+\end{align}
+The $u$-direction is geodesically free: all Christoffel symbols with a $u$-index vanish.
+Crucially, $\Gamma^R_{vw} = \alpha'(R)/(2f(R))$ couples motion in $v$ and $w$ to
+acceleration in $R$.  This is the gravitational term.
+
+\medskip
+\textbf{Geodesic equations.}  The four geodesic equations
+$\ddot{x}^\sigma + \Gamma^\sigma_{\mu\nu}\, \dot{x}^\mu \dot{x}^\nu = 0$ are:
+\begin{align}
+  \ddot{R} + \frac{f'}{2f}\, \dot{R}^2
+    + \frac{\alpha'}{f}\, \dot{v}\, \dot{w} &= 0,
+    \label{eq:cor20_geodesic_R} \\[4pt]
+  \ddot{u} &= 0, \label{eq:cor20_geodesic_u} \\[4pt]
+  \ddot{v} + \frac{\alpha'(\alpha\, \dot{v} - \dot{w})}{\alpha^2 - 1}\, \dot{R} &= 0,
+    \label{eq:cor20_geodesic_v} \\[4pt]
+  \ddot{w} + \frac{\alpha'(\alpha\, \dot{w} - \dot{v})}{\alpha^2 - 1}\, \dot{R} &= 0.
+    \label{eq:cor20_geodesic_w}
+\end{align}
+Equation~\eqref{eq:cor20_geodesic_u} is free: $u$ decouples completely.
+Equation~\eqref{eq:cor20_geodesic_R} contains the gravitational coupling: motion in $v$ and
+$w$ produces acceleration in $R$, weighted by $\alpha'(R)/f(R)$.
+
+\medskip
+\textbf{Riccati reduction.}  At leading order ($\alpha^2 \ll 1$), the $v$--$w$ system
+reparametrised from affine parameter $s$ to $R$ gives:
+\[
+  \frac{dV}{dR} = -\alpha'(R)\, W, \qquad
+  \frac{dW}{dR} = -\alpha'(R)\, V,
+\]
+where $V = dv/ds$, $W = dw/ds$.  The velocity ratio $y(R) = V/W$ satisfies:
+\[
+  \boxed{\frac{dy}{dR} = \alpha'(R)\, (y^2 - 1).}
+\]
+This is a Riccati equation with coefficients $a = -\alpha'$, $b = 0$, $c = \alpha'$.
+
+\medskip
+\textbf{Fixed points and exact solution.}  The fixed points are $y = \pm 1$
+($V = \pm W$: null trajectories on the $v$--$w$ plane).  The equation is separable;
+integrating:
+\[
+  y(R) = -\coth\!\bigl(\alpha(R) + C\bigr),
+\]
+where $C$ is the integration constant set by initial conditions.
+
+\textit{Stability analysis.}  Near $y = +1$: perturbations grow as $\exp(+2\alpha(R))$
+(unstable).  Near $y = -1$: perturbations decay as $\exp(-2\alpha(R))$ (stable).
+Since $\alpha \approx 1/137$, the flow rate is $\sim 2/137$ per $R$-unit.  This is why
+gravitationally bound systems are quasi-stable over cosmological timescales.
+
+\medskip
+\textbf{Riemann and Ricci tensors.}  The full Riemann tensor has 12 independent
+non-zero components, all built from $\alpha'$, $\alpha''$, $f'$, and $f$.  The non-zero
+Ricci components are:
+\begin{align}
+  R_{RR} &= \frac{-\bigl(2(\alpha\, \alpha'' + \alpha'^2)(\alpha^2 - 1) f
+    - (\alpha^2 - 1)\alpha\, \alpha' f'
+    - 3\alpha^2 f\, \alpha'^2 + f\, \alpha'^2\bigr)}{2(\alpha^2 - 1)^2 f}, \\[4pt]
+  R_{vv} = R_{ww} &= \frac{\alpha'^2}{2(\alpha^2 - 1) f}, \\[4pt]
+  R_{vw} &= \frac{2f\, \alpha'' - \alpha' f'}{4f^2}.
+\end{align}
+The equality $R_{vv} = R_{ww}$ reflects isotropy in the $v$--$w$ plane.  The Ricci
+tensor vanishes identically when $\alpha'(R) = 0$ (constant coupling $\Rightarrow$
+flat space $\Rightarrow$ no gravity).
+
+\medskip
+\textbf{Einstein tensor.}  $G_{\mu\nu} = R_{\mu\nu} - \tfrac{1}{2}\, g_{\mu\nu}\, \mathcal{R}$,
+where $\mathcal{R}$ is the Ricci scalar.  Key structural properties:
+\begin{enumerate}
+\item $G_{vv} = G_{ww}$: isotropic pressure in the $v$--$w$ plane.
+\item $G_{uu} \ne G_{vv}$: the helix picks a preferred axis.  The effective
+      stress-energy is anisotropic---one direction along the helix, isotropic
+      transverse to it.
+\item All components vanish when $\alpha'(R) = 0$.
+\end{enumerate}
+
+\medskip
+\textbf{Recovery of GR: Newtonian limit.}  In the slow-field approximation (drop the
+$\dot{R}^2$ term in \eqref{eq:cor20_geodesic_R}):
+\[
+  \ddot{R} \approx -\frac{\alpha'(R)}{f(R)}\, \dot{v}\, \dot{w}.
+\]
+Comparing with Newton's law $\ddot{r} = -d\Phi/dr$:
+\[
+  \frac{d\Phi}{dr} \sim \frac{\alpha'(R)}{f(R)}\, \dot{v}\, \dot{w}.
+\]
+The product $\dot{v}\, \dot{w}$ plays the role of the source (mass/energy).  The ratio
+$\alpha'(R)/f(R)$ is the gravitational coupling.
+
+\medskip
+\textbf{Recovery of GR: Einstein equation as tautology.}  In GR, $G_{\mu\nu} =
+8\pi G\, T_{\mu\nu}$ relates geometry (left) to matter (right).  In GToR, $G_{\mu\nu}$ is
+computed entirely from $f(R)$ and $\alpha(R)$, both derived from the helix geometry.
+There is no independent $T_{\mu\nu}$.  What GR calls ``matter'' is the non-trivial part of
+the Einstein tensor.  The Einstein equation is not wrong---it is a \emph{tautology} when
+viewed from the helix: both sides are the same geometric object, split artificially into
+``geometry'' and ``matter'' by the GR formalism.
+
+\medskip
+\textbf{The hierarchy problem.}  At leading order, $\alpha = 1/(14\pi^2) = \text{const}$,
+so $\alpha'(R) = 0$ and there is no gravity.  Gravity requires the toroidal correction
+$\varepsilon(R)$ to the fine structure constant:
+\[
+  \alpha(R) = \frac{1}{14\pi^2} + \varepsilon(R), \qquad
+  \text{gravitational coupling} = \frac{\varepsilon'(R)}{f(R)}.
+\]
+Electromagnetism is the in-sheet coupling (Corollary~19), entering at $O(\alpha)$.
+Gravity is the inter-sheet coupling, entering at $O(\alpha')$---the derivative of a
+$1/137$-scale correction.  The hierarchy $G_{\text{gravity}} \ll G_{\text{EM}}$ is not a
+mystery; it is the difference between a function and its derivative.
+
+\medskip
+\textbf{Connection to the Riccati framework.}  The geodesic Riccati equation
+$dy/dR = \alpha'(R)(y^2 - 1)$ is the same structural form as the Riccati equations
+governing radial dynamics on the single cell (Corollary~11) and special function
+classification (Yazdani, 2026b).  In all three cases:
+\begin{itemize}
+\item Fixed points are the asymptotic regimes.
+\item The flow rate is controlled by a geometric parameter.
+\item The solution is a hyperbolic function of the running variable.
+\end{itemize}
+The Euler equation on the cone (Corollary~8) is the \emph{trivial} Riccati case: both
+fixed points live in the same log coordinate, WKB is exact, no scar forms.  The geodesic
+equation on the coarse-grained manifold is the next case: the flow is slow ($\sim 2\alpha$)
+because the pitch angle is small.  This is why gravitationally bound orbits persist over
+cosmological timescales.
+
+\medskip
+\textbf{Caveat.}  This corollary derives the effective metric, Christoffel symbols,
+geodesic equations, Riemann tensor, Ricci tensor, Einstein tensor, Newtonian limit, and
+Riccati reduction from the coarse-grained chain geometry.  The following remain open:
+\begin{enumerate}
+\item[(a)] The explicit form of $f(R)$, to be derived from $\det(T) = 1/2$ scaling
+  with the expanding torus radius.
+\item[(b)] The explicit form of $\varepsilon(R)$ (the toroidal correction to $\alpha$),
+  to be derived from the closure condition at finite $R$.
+\item[(c)] Recovery of the $1/r^2$ force law from the geodesic equation in the appropriate
+  limit.
+\item[(d)] Connection between the product $\dot{v}\, \dot{w}$ and the mass
+  $m = \pi k^2/2$ derived from holonomy.
+\end{enumerate}
+These are deferred to later work.
+
+\medskip
+\textbf{Verification.}  All computations performed symbolically via SymPy.
+\begin{itemize}
+\item Metric, inverse metric, and $g \cdot g^{-1} = I$ confirmed.
+\item All six independent Christoffel symbols computed; lower-index symmetry verified.
+\item Four geodesic equations derived from Christoffel symbols.
+\item Riccati reduction: $y = -\coth(\alpha(R) + C)$ substituted into $dy/dR =
+  \alpha'(y^2 - 1)$; residual zero.
+\item Riemann tensor: 12 independent non-zero components computed.
+\item Ricci tensor: $R_{vv} = R_{ww}$ confirmed ($v$--$w$ isotropy).
+\item Einstein tensor: $G_{vv} = G_{ww}$ confirmed.
+\item All tensors vanish identically when $\alpha' = 0$.
+\end{itemize}
+Full computation in \texttt{gtor\_cor20\_verify.py}.
+\end{corollary}
+
+\end{document}

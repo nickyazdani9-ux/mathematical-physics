@@ -21,7 +21,7 @@ mathematical-physics/
 │   ├── gtor/                     # Helical manifold / GToR manuscript
 │   └── wips/                     # Works in progress
 ├── engineering/
-│   └── riccati-v0.4.tar.gz       # Riccati ODE solver package
+│   └── riccati/       	          # Riccati ODE solver package
 └── LICENSE
 ```
 
