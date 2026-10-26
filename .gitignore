@@ -84,3 +84,11 @@ target/
 # IPython
 profile_default/
 ipython_config.py
+
+# Local financial dynamics outputs (curated synthetic evidence is versioned separately)
+/runs/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+.env.*
+!.env.example

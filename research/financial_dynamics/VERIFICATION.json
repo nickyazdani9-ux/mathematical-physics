@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-10-26T23:53:28.563533+00:00",
+  "base_commit": "4f8e4a727761b904ae7a94289a25240e056d9d87",
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0"
+  },
+  "unit_tests": {
+    "command": "python -m unittest discover -s engineering/financial_dynamics/tests -v",
+    "passed": 47,
+    "failed": 0,
+    "reported_seconds": 0.408
+  },
+  "synthetic_run": {
+    "run_id": "726dee6886cb9f5e8af8",
+    "backtests": 45,
+    "elapsed_seconds": 0.8844009210006334,
+    "cloud_spend_usd": 0,
+    "promotion_eligible": false,
+    "final_holdout_accessed": false
+  },
+  "checks": {
+    "artifact_digests": true,
+    "source_digests": true,
+    "bulk_events_and_ids": true,
+    "event_mapping_compatible": true,
+    "json_parse": true,
+    "yaml_syntax": true,
+    "relative_document_links": true
+  },
+  "not_verified": [
+    "real market backtesting",
+    "GPU/provider API integration",
+    "Docker or collector configuration runtime validation",
+    "Elasticsearch/Kibana ingestion",
+    "Datadog ingestion",
+    "bank/Stripe integration",
+    "issued invoices or tax eligibility"
+  ],
+  "source_and_test_sha256": {
+    "engineering/financial_dynamics/__init__.py": "5f65800e09c7bd5f607d01c538c899963459cec987070a3911366eacb8482ad9",
+    "engineering/financial_dynamics/backtest.py": "5b43ffc18a2e7e199adbda0defc32de8b1bf4e4c8ab66988485314d0064c90fc",
+    "engineering/financial_dynamics/data.py": "d4c50d3a1c08993ad29f48323eba7233bf4ef8db3c85523b54b67424835e514f",
+    "engineering/financial_dynamics/experiments.py": "248926c4e067500b734bfc6e258b840e02916005418ba01ef8438dc628d882f8",
+    "engineering/financial_dynamics/geometry.py": "5475b423559eb1d9e1b7a3376d2cf8f9e614d751f3fcd3dc6c958860af4dea53",
+    "engineering/financial_dynamics/invoices.py": "9d10d41ee5810febb29fb6452eb343a0fe801a1c3928533f1b755a0ca397b421",
+    "engineering/financial_dynamics/lifecycle.py": "921183bebaabaa34cbcefd044e3875b62883b3c474604fb33a9fb51153e35ec4",
+    "engineering/financial_dynamics/tests/test_backtest.py": "1995f03356c2b44df7f34be6256c6d5071fb1153231fe7333499dfc54219a16b",
+    "engineering/financial_dynamics/tests/test_experiments.py": "099b0dc5d29e4a2010da2715fffef78c63e6e0bdca600ecc60f6cdbd844877d6",
+    "engineering/financial_dynamics/tests/test_geometry.py": "4aba216d493b276dd3cb3703127f912408f8dd1b9501d0106c1169f57750c7e7",
+    "engineering/financial_dynamics/tests/test_operations.py": "fd7d2d2ee2edeef9696ffe4ea1f43eaa6e49a874b6cb5e0132905bc3e1ec0d0e",
+    "engineering/financial_dynamics/tests/test_regressions.py": "a7922af05c3f3e7ffe5c94f6c1909d82eee881bfa68fbca7097fe438d435dbb1"
+  }
+}
