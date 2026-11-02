@@ -66,3 +66,43 @@ An underlying graph may encode relations without presupposing spatial distance. 
 ## Limitations
 
 A rigorous internal mathematical derivation does not independently validate the physical assumptions used. The proposed framework has not been shown to reproduce general relativity, the Standard Model, quantum measurement statistics, or the observed cosmological constant. Such results remain tasks for future research.
+
+
+## Research Audit 01 — 3 November 2026
+
+### Aim
+
+Compare GTOR's candidate assumptions to established mathematical/physical constraints. A mismatch with an interpretation is not necessarily a flaw in the predictive formalism. The burden is to produce an explicit, quantitative alternative.
+
+| Topic | What conventional formalism actually establishes | Open GTOR test |
+|---|---|---|
+| Global phase | Replacing an entire isolated quantum state by the same state times one unit-modulus complex number changes no Born probabilities; relative phases remain measurable. | Define an external reference or added interaction that gives a common phase an observable distinction. |
+| Normalisation | Rescaling a nonzero state vector to unit norm picks a representative of a physical ray; it is not generally a projection that discards geometry. | State exactly what extra amplitude/radial degree of freedom is physically measured and how. |
+| Black holes | Classical singularity theorems establish geodesic incompleteness under specified hypotheses, not independently an actual point of infinite matter density. | Build a complete nonsingular interior satisfying clear dynamics and boundary conditions, and recover exterior observables. |
+| Information preservation | Deterministic evolution alone does not imply a reversible inverse. | Prove injectivity/bijectivity or explicitly expand state space to retain a bath/history. |
+| Emergent geometry | A graph metric is definable, but Lorentzian 3+1 geometry does not follow without additional assumptions and a scaling limit. | Build a finite model, then demonstrate a continuum limit and physical clock/ruler behaviour. |
+| Dissipation | Effective damping can arise after eliminating environmental degrees of freedom; static friction needs contact mechanics. | Benchmark against solvable system-plus-bath models and verify energy accounting. |
+
+### First exact check — global phase
+
+For any complex state vector psi, scalar a with |a|=1, and Hermitian observable O, (a psi)† O (a psi) = psi† O psi. If psi is nonzero, dividing by psi† psi makes this identity independent of the vector's overall norm. This is elementary algebra. It establishes observational equivalence for the standard observable algebra, not the metaphysical nonexistence of an absolute phase. To claim a measurable global phase, GTOR must specify an additional comparison system or operational observable that changes between these states.
+
+### First exact check — normalisation
+
+For a nonzero complex vector v, v / sqrt(v†v) has unit norm. The map discards the positive overall magnitude as a *coordinate convention for rays*, but a physical theory may assign meaning to magnitude via total excitation number or other degrees of freedom. These are distinct constructions: no theorem states all physical information must be lost.
+
+### Black-hole asymptote proposal
+
+A regularising map r = L * u/(1+u) (u>0) produces a bounded r but does not itself solve Einstein's equations, ensure curvature invariants remain finite, or establish completeness of all causal geodesics. The proposed solution must provide a metric, field equations, stress tensor or effective action, boundary/initial conditions, curvature checks, global extension and measurable predictions. Begin with a spherically symmetric toy metric, compare against Schwarzschild and published regular-black-hole models, and derive its ringdown/shadow consequences.
+
+### Literature benchmarks
+
+- Luminet (2025), A Primer on Spacetime Singularities I: Mathematical Framework: https://doi.org/10.3390/universe11080272
+- Gregory and Nissanke (2025), Black Holes as Laboratories: Tests of General Relativity: https://doi.org/10.1007/s10714-025-03437-7
+- Black Hole Spectroscopy and Tests of General Relativity with GW250114 (2026): https://doi.org/10.1103/6c61-fm1n
+- Nonperturbative quantum gravity denounces singular black holes (2025): https://doi.org/10.1103/PhysRevD.111.086026
+- Nemoto and Braunstein (2003), Quantum coherence in the presence of unobservable quantities: https://doi.org/10.1103/PhysRevA.68.042326
+
+### Decision gate
+
+Before adding a new axiom: specify one physically distinguishable observable that GTOR predicts differently from an established baseline, or one rigorously demonstrated simplification with no loss of empirically established results. Prefer the phase/normalisation test as a small first benchmark, before the full black-hole interior problem.
