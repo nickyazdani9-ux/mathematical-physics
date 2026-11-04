@@ -11,14 +11,16 @@ import Mathlib.Tactic.Ring
 # Riccati coordinates for scalar second-order homogeneous linear ODEs
 
 A formal companion to Nick Navid Yazdani, *What Is So Special About “Special
-Functions”?* (March 2026), §§3–9 and 12. The independent variable is real.
+Functions”?* (March 2026, expanded November 2026), §§3–9 and 12. The independent variable is real.
 Solutions and coefficients in the Riccati and family theorems may be complex.
 
 Reproduce in a mathlib4 checkout at tag `v4.26.0` (Lean 4.26.0):
 `lake exe cache get`, then `lake env lean -DwarningAsError=true RiccatiZoo.lean`.
 For the dependency audit, append `#print axioms RiccatiZoo.riccati_iff`.
 All family statements are equations for solutions, independent of the choice
-of boundary conditions. Named-function asymptotics require additional analysis.
+of boundary conditions. The explicit half-order outgoing Bessel mode is
+proved to solve its ODE and to have both stated endpoint limits. The label
+Hankel and general-order asymptotics use classical reference formulas.
 -/
 
 namespace RiccatiZoo
@@ -118,6 +120,21 @@ theorem legendre_iff (r : RegularAt y x) (ℓ : ℂ) (hx : 1 - (x : ℂ)^2 ≠ 0
       (ℓ*(ℓ+1)) * y x = 0 ↔
     deriv (logD y) x = -(logD y x)^2 - ((-2 * (x : ℂ))/(1-(x:ℂ)^2)) * logD y x -
       (ℓ*(ℓ+1))/(1-(x:ℂ)^2) := leading_coeff_iff r hx _ _
+
+/-- Gauss's hypergeometric equation away from its finite singular points. -/
+theorem gauss_hypergeometric_iff (r : RegularAt y x) (a b c : ℂ)
+    (hx : (x : ℂ) * (1 - (x : ℂ)) ≠ 0) :
+    (x : ℂ) * (1 - (x : ℂ)) * deriv (deriv y) x +
+      (c - (a+b+1) * (x : ℂ)) * deriv y x + (-(a*b)) * y x = 0 ↔
+    deriv (logD y) x = -(logD y x)^2 -
+      ((c - (a+b+1) * (x : ℂ)) / ((x : ℂ) * (1 - (x : ℂ)))) * logD y x -
+      (-(a*b)) / ((x : ℂ) * (1 - (x : ℂ))) := leading_coeff_iff r hx _ _
+
+/-- Kummer's confluent hypergeometric equation away from zero. -/
+theorem kummer_iff (r : RegularAt y x) (a b : ℂ) (hx : (x : ℂ) ≠ 0) :
+    (x : ℂ) * deriv (deriv y) x + (b - (x : ℂ)) * deriv y x + (-a) * y x = 0 ↔
+    deriv (logD y) x = -(logD y x)^2 - ((b - (x : ℂ)) / (x : ℂ)) * logD y x -
+      (-a) / (x : ℂ) := leading_coeff_iff r hx _ _
 
 /-! ## Recovery, with the integral in Theorem 3.2 -/
 
@@ -451,6 +468,156 @@ theorem coupled_mode_solves_iff (κ r ℓ : ℂ) {u : ℝ} (hu : 0 < 1+u) :
   rw [h, mul_eq_zero, div_eq_zero_iff]
   have hyn : y u ≠ 0 := Complex.exp_ne_zero _
   simp [hyn, pow_ne_zero 2 ht, sub_eq_zero]
+
+/-! ## What the substitution forgets
+
+On a connected zero-free interval, two curves have the same fractional rate
+of change exactly when they differ by one nonzero constant. This statement
+does not require either curve to satisfy a differential equation. -/
+
+theorem same_logD_iff_rescaling {f g : ℝ → ℂ} {I : Set ℝ} {a : ℝ}
+    (ho : IsOpen I) (hc : I.OrdConnected) (ha : a ∈ I)
+    (hf : ∀ t ∈ I, DifferentiableAt ℝ f t) (hg : ∀ t ∈ I, DifferentiableAt ℝ g t)
+    (hf₀ : ∀ t ∈ I, f t ≠ 0) (hg₀ : ∀ t ∈ I, g t ≠ 0) :
+    I.EqOn (logD f) (logD g) ↔ ∃ c : ℂ, c ≠ 0 ∧ I.EqOn f (fun t => c * g t) := by
+  constructor
+  · intro he
+    let c := f a / g a
+    have flat (t : ℝ) (ht : t ∈ I) : HasDerivAt (fun s => f s / g s) 0 t := by
+      have hs := he ht
+      change deriv f t / f t = deriv g t / g t at hs
+      have cross := (div_eq_div_iff (hf₀ t ht) (hg₀ t ht)).mp hs
+      convert (hf t ht).hasDerivAt.fun_div (hg t ht).hasDerivAt (hg₀ t ht) using 1
+      rw [cross, mul_comm (deriv g t) (f t), sub_self, zero_div]
+    have ratio : I.EqOn (fun t => f t / g t) (fun _ => c) := by
+      apply ho.eqOn_of_deriv_eq hc.isPreconnected
+      · exact fun t ht => (flat t ht).differentiableAt.differentiableWithinAt
+      · exact differentiableOn_const _
+      · intro t ht
+        rw [(flat t ht).deriv, (hasDerivAt_const t c).deriv]
+      · exact ha
+      · rfl
+    exact ⟨c, div_ne_zero (hf₀ a ha) (hg₀ a ha),
+      fun t ht => (div_eq_iff (hg₀ t ht)).mp (ratio ht)⟩
+  · rintro ⟨c, hc₀, hfg⟩ t ht
+    have hI : ∀ᶠ s in 𝓝 t, s ∈ I := ho.mem_nhds ht
+    have hloc : f =ᶠ[𝓝 t] fun s => c * g s := hI.mono fun _ hs => hfg hs
+    have hd := ((hg t ht).hasDerivAt.const_mul c).congr_of_eventuallyEq hloc
+    unfold logD
+    rw [hd.deriv, hfg ht]
+    field_simp [hc₀, hg₀ t ht]
+
+/-! ## A single exact Bessel trajectory at both ends
+
+The elementary outgoing half-order mode is defined without choosing a
+complex logarithm. On positive x its amplitude is the reciprocal of the
+positive square root. The limits below concern the very same solution. -/
+
+def halfWave (t : ℝ) : ℂ := Complex.exp (Complex.I * (t : ℂ) - (Real.log t : ℂ) / 2)
+
+private def halfSlope (t : ℝ) : ℂ := Complex.I - (1 / 2 : ℂ) / (t : ℂ)
+
+theorem half_wave_formula {t : ℝ} (ht : 0 < t) :
+    halfWave t = Complex.exp (Complex.I * (t : ℂ)) / (Real.sqrt t : ℂ) := by
+  rw [halfWave, Complex.exp_sub]
+  have hs : Real.exp (Real.log t / 2) = Real.sqrt t := by
+    rw [Real.sqrt_eq_rpow, Real.rpow_def_of_pos ht]
+    congr 1
+    ring
+  rw [show (Real.log t : ℂ) / 2 = ((Real.log t / 2 : ℝ) : ℂ) by push_cast; rfl,
+    ← Complex.ofReal_exp, hs]
+
+private theorem half_wave_deriv {t : ℝ} (ht : 0 < t) :
+    HasDerivAt halfWave (halfWave t * halfSlope t) t := by
+  have hid : HasDerivAt (fun v : ℝ => (v : ℂ)) (1 : ℂ) t := by
+    simpa using (hasDerivAt_id t).ofReal_comp
+  have hl := ((Real.hasDerivAt_log ht.ne').ofReal_comp).div_const (2 : ℂ)
+  convert ((hid.const_mul Complex.I).sub hl).cexp using 1
+  simp only [halfWave, halfSlope, Pi.sub_apply, mul_one, Complex.ofReal_inv]
+  ring
+
+private theorem half_slope_deriv {t : ℝ} (ht : 0 < t) :
+    HasDerivAt halfSlope ((1 / 2 : ℂ) / (t : ℂ)^2) t := by
+  have hid : HasDerivAt (fun v : ℝ => (v : ℂ)) (1 : ℂ) t := by
+    simpa using (hasDerivAt_id t).ofReal_comp
+  have hn : (t : ℂ) ≠ 0 := by exact_mod_cast ht.ne'
+  convert (((hasDerivAt_const t (1 / 2 : ℂ)).fun_div hid hn).const_sub Complex.I) using 1
+  ring
+
+theorem half_wave_logD {t : ℝ} (ht : 0 < t) :
+    logD halfWave t = Complex.I - (1 / 2 : ℂ) / (t : ℂ) := by
+  unfold logD
+  rw [(half_wave_deriv ht).deriv]
+  have h₀ : halfWave t ≠ 0 := Complex.exp_ne_zero _
+  change halfWave t * halfSlope t / halfWave t = halfSlope t
+  field_simp [h₀]
+
+theorem half_wave_solves_bessel {t : ℝ} (ht : 0 < t) :
+    (t : ℂ)^2 * deriv (deriv halfWave) t + (t : ℂ) * deriv halfWave t +
+      ((t : ℂ)^2 - (1/2 : ℂ)^2) * halfWave t = 0 := by
+  have hp : ∀ᶠ u in 𝓝 t, 0 < u := lt_mem_nhds ht
+  have hfirst : deriv halfWave =ᶠ[𝓝 t] fun u => halfWave u * halfSlope u :=
+    hp.mono fun u hu => (half_wave_deriv hu).deriv
+  have hd := half_wave_deriv ht
+  have hsecond := hfirst.deriv_eq.trans (hd.fun_mul (half_slope_deriv ht)).deriv
+  rw [hsecond, hd.deriv]
+  have hn : (t : ℂ) ≠ 0 := by exact_mod_cast ht.ne'
+  unfold halfSlope
+  field_simp [hn]
+  ring_nf
+  simp [Complex.I_sq]
+
+theorem half_wave_connects :
+    Tendsto (fun t : ℝ => (t : ℂ) * logD halfWave t) (𝓝[>] 0) (𝓝 (-(1/2 : ℂ))) ∧
+    Tendsto (logD halfWave) atTop (𝓝 Complex.I) := by
+  constructor
+  · have h : (fun t : ℝ => (t : ℂ) * logD halfWave t) =ᶠ[𝓝[>] 0]
+        fun t => (t : ℂ) * Complex.I - 1/2 := by
+      filter_upwards [self_mem_nhdsWithin] with t ht
+      have hpos : 0 < t := ht
+      have hn : (t : ℂ) ≠ 0 := by exact_mod_cast hpos.ne'
+      rw [half_wave_logD hpos]
+      field_simp [hn]
+    have hraw := (Complex.continuous_ofReal.continuousAt (x := 0)).tendsto.mono_left
+      (nhdsWithin_le_nhds (s := Set.Ioi 0))
+    apply (tendsto_congr' h).mpr
+    simpa using (hraw.mul_const Complex.I).sub_const (1/2 : ℂ)
+  · have h : logD halfWave =ᶠ[atTop] fun t : ℝ => Complex.I - (1/2 : ℂ) * ((t⁻¹ : ℝ) : ℂ) := by
+      filter_upwards [eventually_gt_atTop (0 : ℝ)] with t ht
+      rw [half_wave_logD ht]
+      simp [div_eq_mul_inv]
+    have hi : Tendsto (fun t : ℝ => ((t⁻¹ : ℝ) : ℂ)) atTop (𝓝 0) := by
+      simpa only [Function.comp_def, Complex.ofReal_zero] using
+        (Complex.continuous_ofReal.continuousAt (x := 0)).tendsto.comp tendsto_inv_atTop_zero
+    apply (tendsto_congr' h).mpr
+    simpa using (tendsto_const_nhds (x := Complex.I) (f := atTop)).sub (hi.const_mul (1/2 : ℂ))
+
+/-- In Bessel normal form the quarter cancels the order term exactly at order ±½. -/
+theorem bessel_effective_potential (t ν : ℝ) (ht : t ≠ 0) :
+    (1 - ν^2/t^2) - (-1/t^2)/2 - (1/t)^2/4 = 1 + (1/4-ν^2)/t^2 := by
+  field_simp [ht]
+  ring
+
+/-- Multiplying by a constant phase gradient preserves the residual for any
+potential Q. This allows a comparison on the cone at a fixed spectral parameter. -/
+theorem phase_gauge_residual {F V : ℝ → ℂ} {x : ℝ} (A P Q κ : ℂ)
+    (hF : ∀ᶠ t in 𝓝 x, HasDerivAt F (V t) t) (hV : HasDerivAt V A x) :
+    let G := fun t : ℝ => Complex.exp (κ * (t : ℂ))
+    let y := fun t => G t * F t
+    deriv (deriv y) x + (P - 2*κ) * deriv y x + (Q - κ*P + κ^2) * y x =
+      G x * (A + P * V x + Q * F x) := by
+  let G := fun t : ℝ => Complex.exp (κ * (t : ℂ))
+  let y := fun t => G t * F t
+  have dG (t : ℝ) : HasDerivAt G (G t * κ) t := by
+    simpa [G] using ((hasDerivAt_id t).ofReal_comp.const_mul κ).cexp
+  have hfirst : deriv y =ᶠ[𝓝 x] fun t => G t * κ * F t + G t * V t :=
+    hF.mono fun t ht => ((dG t).fun_mul ht).deriv
+  have hsecond := (((dG x).mul_const κ).fun_mul hF.self_of_nhds).add ((dG x).fun_mul hV)
+  have atx : deriv (fun t => G t * κ * F t + G t * V t) x = _ := hsecond.deriv
+  change deriv (deriv y) x + (P - 2*κ) * deriv y x + (Q - κ*P + κ^2) * y x = _
+  rw [hfirst.deriv_eq, hfirst.self_of_nhds, atx]
+  dsimp only [y, G, Pi.add_apply]
+  ring
 
 end
 end RiccatiZoo
