@@ -37,7 +37,7 @@ An alternative geometric framework for integration based on level-set contractio
 No Riemann sums appear anywhere.
 
 ### What Is So Special About "Special Functions"?
-The November revision starts with a sine wave crossing zero. It derives the common projective Riccati equation, reconstructs the lost amplitude, computes the logarithmic Schwarzian term and checks the exponents on a coupled cone. Its 31 Lean theorems cover the local identities and the named equation forms. Boundary conditions and named-function asymptotics are treated separately.
+The expanded March manuscript opens with the question behind “try an exponential.” Four familiar functions introduce fractional growth. A spring, Euler's logarithmic clock and an outgoing Bessel wave then carry the same calculation to a winding coordinate on a cone. The paper derives the Schwarzian and Langer quarter from elementary differentiation. Its Lean companion checks 40 public theorems, including both endpoint limits of the explicit half-order Bessel wave, recovery up to scale, and the cone's change of phase at a fixed spectral parameter.
 
 [Revised paper (PDF)](mathematics/riccati_odes/riccati_paper.pdf) · [LaTeX source](mathematics/riccati_odes/riccati_paper.tex) · [Lean proofs](mathematics/riccati_odes/RiccatiZoo.lean) · [Runnable CAS examples](https://github.com/nickyazdani9-ux/better_calculator/blob/6e75789b946429b259de33fb6c93be74dfc2b8a8/docs/ODE.md)
 
@@ -79,6 +79,7 @@ One manifold. One parameter. One torus. Contraction integrals throughout. Leibni
 |---|---|---|
 | Contraction integrals via inverse duality | mathematics/ | Verified (SymPy) |
 | Linear ODE and projective Riccati equation | mathematics/riccati_odes/ | Local equivalence and interval recovery checked in Lean |
+| One outgoing half-order Bessel wave connects both endpoint regimes | mathematics/riccati_odes/ | Original ODE and both limits checked in Lean |
 | Half-Schwarzian of log *x* is 1/(4*x*²) | mathematics/riccati_odes/ | Checked in Lean |
 | Power exponents on the coupled cone satisfy r² = 2ℓ² | mathematics/riccati_odes/ | Checked against the printed ODE in Lean |
 | det *T* = ½ (exact, from Wronskian) | physics/ | Proved analytically |
@@ -100,8 +101,8 @@ One manifold. One parameter. One torus. Contraction integrals throughout. Leibni
 ## Citation
 
 ```
-N. N. Yazdani, "What Is So Special About 'Special Functions'?
-A Wave, Two Coordinate Charts, and the Riccati Equation," revised November 2026.
+N. N. Yazdani, "What Is So Special About 'Special Functions'?"
+Expanded author-review edition, November 2026.
 
 N. N. Yazdani, "Complex Differential Geometry on the Helical
 Manifold," provisional draft, March 2026.
