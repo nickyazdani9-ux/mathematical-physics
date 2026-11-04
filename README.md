@@ -37,12 +37,22 @@ An alternative geometric framework for integration based on level-set contractio
 No Riemann sums appear anywhere.
 
 ### What Is So Special About "Special Functions"?
-The substitution *z* = *y*′/*y* converts any second-order linear ODE into a Riccati flow on ℂ. The fixed points of this flow are the solutions. Every classical special function (Bessel, Airy, Hermite, Legendre) is a smooth trajectory connecting two fixed-point regimes whose autonomising coordinates are globally incompatible. The Langer ¼ correction is exactly ½{ln *x*, *x*} — the Schwarzian derivative of the logarithmic coordinate change. A new result shows that off-diagonal metric coupling eliminates the two-regime incompatibility entirely.
+The November revision starts with a sine wave crossing zero. It derives the common projective Riccati equation, reconstructs the lost amplitude, computes the logarithmic Schwarzian term and checks the exponents on a coupled cone. Its 31 Lean theorems cover the local identities and the named equation forms. Boundary conditions and named-function asymptotics are treated separately.
 
-**Submitted to the *Electronic Journal of Differential Equations* (EJDE), March 2026.**
+[Revised paper (PDF)](mathematics/riccati_odes/riccati_paper.pdf) · [LaTeX source](mathematics/riccati_odes/riccati_paper.tex) · [Lean proofs](mathematics/riccati_odes/RiccatiZoo.lean) · [Runnable CAS examples](https://github.com/nickyazdani9-ux/better_calculator/blob/6e75789b946429b259de33fb6c93be74dfc2b8a8/docs/ODE.md)
 
-### riccati_complete.py
-Self-contained verification of every claim in the special functions paper. Covers constant-coefficient, harmonic oscillator, Euler, Bessel, and Airy equations; Schwarzian derivative computation; Hankel function flow on ℂ; and the coupled-coordinate dissolution of Level 2 (Theorem 12.1). Requires SciPy and SymPy.
+The March 2026 draft was submitted to the *Electronic Journal of Differential Equations*. To reproduce the revision with TeX Live and the pinned Lean toolchain, run the following commands from the repository root.
+
+~~~sh
+cd mathematics/riccati_odes
+latexmk -pdf -halt-on-error riccati_paper.tex
+lake exe cache get
+lake build
+~~~
+
+### Original computational exploration
+
+The March [SciPy and SymPy demonstration](mathematics/riccati_complete.py) accompanies the original draft. For the corrected Bessel branch, Euler potential and coupled exponents, use the November paper and the proof above.
 
 ---
 
@@ -57,8 +67,9 @@ One manifold. One parameter. One torus. Contraction integrals throughout. Leibni
 
 ## Engineering
 
-### Riccati ODE Solver (`riccati/`)
-A Python package implementing the Riccati flow approach to solving second-order linear ODEs. Three modes: symbolic (real field), numerical (complex field integration), and coupled-manifold. Classifies equations by autonomy level, extracts fixed points, and recovers solutions via quadrature.
+### Riccati ODE computation
+
+[Better Calculator’s differential-equation component](https://github.com/nickyazdani9-ux/better_calculator/pull/16) returns exact bases or explicit Riccati reductions. The [original research prototype](engineering/riccati/) explores symbolic and numerical fixed-point candidates.
 
 ---
 
@@ -67,9 +78,9 @@ A Python package implementing the Riccati flow approach to solving second-order 
 | Result | Location | Status |
 |---|---|---|
 | Contraction integrals via inverse duality | mathematics/ | Verified (SymPy) |
-| Special functions = Riccati flow transitions | mathematics/ | Verified; submitted to EJDE |
-| Langer ¼ = ½{ln *x*, *x*} | mathematics/ | Verified (SymPy) |
-| Coupled coordinates dissolve Level 2 | mathematics/ + physics/ | Verified (symbolic + numerical) |
+| Linear ODE and projective Riccati equation | mathematics/riccati_odes/ | Local equivalence and interval recovery checked in Lean |
+| Half-Schwarzian of log *x* is 1/(4*x*²) | mathematics/riccati_odes/ | Checked in Lean |
+| Power exponents on the coupled cone satisfy r² = 2ℓ² | mathematics/riccati_odes/ | Checked against the printed ODE in Lean |
 | det *T* = ½ (exact, from Wronskian) | physics/ | Proved analytically |
 | tr *T*ₗ = (3/2)cosh(ℓ√2 ln 2) | physics/ | Proved analytically |
 | *k*-independence of *T*ₗ | physics/ | Proved (gauge diagonalisation + integrality) |
@@ -90,8 +101,7 @@ A Python package implementing the Riccati flow approach to solving second-order 
 
 ```
 N. N. Yazdani, "What Is So Special About 'Special Functions'?
-Riccati Flows, the Schwarzian Derivative, and the Unification
-of Classical Solutions," submitted to EJDE, March 2026.
+A Wave, Two Coordinate Charts, and the Riccati Equation," revised November 2026.
 
 N. N. Yazdani, "Complex Differential Geometry on the Helical
 Manifold," provisional draft, March 2026.
