@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "parent_run_id": "726dee6886cb9f5e8af8",
+  "source_manifest_sha256": "f8d99820862296007eaad19498522cdd293ecad92ba7acf5453677c081d2db64",
+  "auto_execute": false,
+  "promotion_eligible": false,
+  "comparisons": [
+    {
+      "scenario": "null",
+      "mean_return_by_model": {
+        "cash": 0.0,
+        "buy_hold": -0.18933430942709792,
+        "momentum": -0.1816575293757626,
+        "ridge": -0.10327654777885782,
+        "geometric_ridge": -0.12149463866209757
+      }
+    },
+    {
+      "scenario": "quasiperiodic",
+      "mean_return_by_model": {
+        "cash": 0.0,
+        "buy_hold": -0.11317985740233061,
+        "momentum": 0.4618602590362748,
+        "ridge": 0.19813239143521866,
+        "geometric_ridge": 0.5498896279943518
+      }
+    },
+    {
+      "scenario": "regime",
+      "mean_return_by_model": {
+        "cash": 0.0,
+        "buy_hold": -0.24665370912763462,
+        "momentum": -0.012033473111542792,
+        "ridge": -0.07765738762656209,
+        "geometric_ridge": 0.031913044611097674
+      }
+    }
+  ],
+  "proposals": [
+    {
+      "id": "FD-E02",
+      "hypothesis": "Incremental geometry helps beyond lagged returns",
+      "test": "Matched parameter-budget ablations: remove phase, projective state, gate, then coupling."
+    },
+    {
+      "id": "FD-E03",
+      "hypothesis": "The apparent effect survives stochastic nulls",
+      "test": "GARCH and IAAFT nulls, new seeds, higher costs and altered frequencies."
+    }
+  ],
+  "decision": "Engineering smoke test only. No real-market performance inference."
+}

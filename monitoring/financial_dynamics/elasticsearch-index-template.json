@@ -1,0 +1,35 @@
+{
+  "index_patterns": ["financial-dynamics-*"],
+  "priority": 200,
+  "version": 1,
+  "_meta": {"purpose": "Synthetic and development experiment metrics; no credentials or financial accounts"},
+  "template": {
+    "mappings": {
+      "dynamic": "strict",
+      "properties": {
+        "@timestamp": {"type": "date"},
+        "schema_version": {"type": "integer"},
+        "run_id": {"type": "keyword"},
+        "event": {"type": "keyword"},
+        "scenario": {"type": "keyword"},
+        "seed": {"type": "integer"},
+        "model": {"type": "keyword"},
+        "total_return": {"type": "double"},
+        "max_drawdown": {"type": "double"},
+        "sharpe_naive": {"type": "double"},
+        "periods": {"type": "integer"},
+        "annualization": {"type": "integer"},
+        "mean_return": {"type": "double"},
+        "volatility": {"type": "double"},
+        "mse": {"type": "double"},
+        "turnover": {"type": "double"},
+        "costs": {"type": "double"},
+        "trades": {"type": "integer"},
+        "mean_ci_exploratory": {"type": "double"},
+        "folds": {"type": "integer"},
+        "evaluation": {"type": "keyword"},
+        "data_kind": {"type": "keyword"}
+      }
+    }
+  }
+}

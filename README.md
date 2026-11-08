@@ -111,3 +111,8 @@ All manuscripts © 2026 Nick Navid Yazdani. Code is released under the MIT Licen
 ## Contact
 
 nickyazdani9@gmail.com
+
+
+## Financial Dynamics Research
+
+[Mathematics, behaviour and AI research programme](research/financial_dynamics/README.md): nonlinear geometric state spaces, macroeconomics, behavioural finance, validation and bounded experiment infrastructure. Initial code is an offline synthetic research foundation; see the state document for tested capabilities and open gates.

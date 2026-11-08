@@ -1,0 +1,222 @@
+{
+  "review_date": "2026-10-27",
+  "sources": [
+    {
+      "id": "S01",
+      "title": "Yazdani: Riccati manuscript",
+      "url": "https://github.com/nickyazdani9-ux/mathematical-physics/blob/4f8e4a727761b904ae7a94289a25240e056d9d87/mathematics/riccati_odes/riccati_paper.tex",
+      "coverage": "Source inspected",
+      "note": "Provisional manuscript; distinguish constant fixed points from instantaneous roots and WKB approximations."
+    },
+    {
+      "id": "S02",
+      "title": "Yazdani: helical geometry manuscript",
+      "url": "https://github.com/nickyazdani9-ux/mathematical-physics/blob/4f8e4a727761b904ae7a94289a25240e056d9d87/physics/wips/docs/gtor_revised_cors1-20.tex",
+      "coverage": "Source inspected",
+      "note": "Helical phase theta=v+2*pi*k*u and periodic closure motivate representation. No market mechanism or physical claim is imported as established."
+    },
+    {
+      "id": "S03",
+      "title": "Gu and Dao: Mamba",
+      "url": "https://arxiv.org/html/2312.00752v2",
+      "coverage": "Methods inspected; v2",
+      "note": "Input-dependent selection is separable from its discretisation and scan implementation. No Mamba cell is used in this prototype."
+    },
+    {
+      "id": "S04",
+      "title": "Muca Cirone et al.: theoretical foundations of selective SSMs",
+      "url": "https://arxiv.org/html/2402.19047v4",
+      "coverage": "Introduction and theoretical framing inspected; v4 2025-01-06",
+      "note": "Connects selectivity to rough paths/signatures; motivates cross-channel interaction ablations. No finance performance implication."
+    },
+    {
+      "id": "S05",
+      "title": "Kidger et al.: neural controlled differential equations",
+      "url": "https://arxiv.org/html/2005.08926v2",
+      "coverage": "Methods framing inspected; v2",
+      "note": "Continuous-time memory driven by observations; online interpolation must use available observations only."
+    },
+    {
+      "id": "S06",
+      "title": "Cariñena and de Lucas: integrability through Riccati equations",
+      "url": "https://arxiv.org/html/1002.0530v3",
+      "coverage": "Theory framing inspected; v3; J Nonlinear Math Phys 2011",
+      "note": "Lie-system reductions and transformation conditions; general Riccati equations are not solved by algebraic roots alone."
+    },
+    {
+      "id": "S07",
+      "title": "Schreiber and Schmitz: surrogate time series",
+      "url": "https://arxiv.org/abs/chao-dyn/9909037",
+      "coverage": "Abstract and metadata only; Physica D 2000",
+      "note": "Test nonlinear explanations against specified stochastic nulls. Rejection of one null is not proof of deterministic chaos."
+    },
+    {
+      "id": "S08",
+      "title": "Bacry et al.: Hawkes processes in finance",
+      "url": "https://arxiv.org/html/1502.04592v2",
+      "coverage": "Definitions and stability section inspected; v2",
+      "note": "Event excitation and microstructure. For the standard nonnegative linear Hawkes model, integrated-kernel spectral radius below one is the stationary stability condition."
+    },
+    {
+      "id": "S09",
+      "title": "Borio: financial cycle and macroeconomics",
+      "url": "https://www.bis.org/publications/working-paper-395-financial-cycle-and-macroeconomics-what-have-we-learnt",
+      "coverage": "Discovery/landing-page coverage only",
+      "note": "Prioritise credit, leverage and liquidity. Full paper and empirical calibration remain queued."
+    },
+    {
+      "id": "S10",
+      "title": "Shiller: Narrative Economics",
+      "url": "https://www.nber.org/system/files/working_papers/w23075/w23075.pdf",
+      "coverage": "First 6 PDF pages inspected; January 2017 working paper",
+      "note": "Narrative diffusion is a research mechanism; reverse causality and measurement remain material."
+    },
+    {
+      "id": "S11",
+      "title": "Alevy, Haigh and List: information cascades experiment",
+      "url": "https://www.nber.org/papers/w12767",
+      "coverage": "Abstract and metadata inspected; WP 2006; published J Finance 2007",
+      "note": "Experimental market professionals and students differ. Avoid assuming one universal retail psychology."
+    },
+    {
+      "id": "S12",
+      "title": "ALFRED vintage data documentation",
+      "url": "https://alfred.stlouisfed.org/help/downloaddata",
+      "coverage": "Official documentation inspected",
+      "note": "Retrieve releases available at past dates; release/vintage dates require timestamp precision for intraday research."
+    },
+    {
+      "id": "S13",
+      "title": "Li et al.: Fourier Neural Operator",
+      "url": "https://arxiv.org/abs/2010.08895",
+      "coverage": "Abstract and metadata only; v3",
+      "note": "Operator learning across PDE families; no claim that market dynamics obey a known PDE."
+    },
+    {
+      "id": "S14",
+      "title": "Brunton et al.: Modern Koopman Theory",
+      "url": "https://arxiv.org/abs/2102.12086",
+      "coverage": "Abstract and metadata only; v2",
+      "note": "Nonlinear dynamics can be represented by a linear operator on observables; finite useful closures are difficult."
+    },
+    {
+      "id": "S15",
+      "title": "Smith et al.: S5",
+      "url": "https://arxiv.org/abs/2208.04933",
+      "coverage": "Abstract and metadata only; v3",
+      "note": "Multi-input multi-output state space reference and computational baseline."
+    },
+    {
+      "id": "S16",
+      "title": "Bailey et al.: Probability of Backtest Overfitting",
+      "url": "https://www.davidhbailey.com/dhbpapers/backtest-prob.pdf",
+      "coverage": "First 8 PDF pages inspected; February 2015 version",
+      "note": "Multiple strategy trials require selection-bias diagnostics; CSCV/PBO does not replace a chronological untouched evaluation."
+    },
+    {
+      "id": "S17",
+      "title": "Bailey and López de Prado: Deflated Sharpe Ratio",
+      "url": "https://www.davidhbailey.com/dhbpapers/deflated-sharpe.pdf",
+      "coverage": "First 8 PDF pages inspected; July 2014 version",
+      "note": "Accounts for multiple selection and non-normality under its assumptions; dependence and trial correlation must also be assessed."
+    },
+    {
+      "id": "S18",
+      "title": "Vast.ai Python SDK quickstart",
+      "url": "https://docs.vast.ai/sdk/python/quickstart",
+      "coverage": "Official lifecycle sections inspected 2026-10-27",
+      "note": "Create returns new_contract; storage starts at creation. Poll with deadlines, export results, destroy and confirm. Stopping alone is insufficient for full cleanup."
+    },
+    {
+      "id": "S19",
+      "title": "Datadog OpenTelemetry Collector setup",
+      "url": "https://docs.datadoghq.com/opentelemetry/setup/collector_exporter/",
+      "coverage": "Official configuration inspected 2026-10-27",
+      "note": "Collector/OTLP integration supported. Pin chosen collector version and verify telemetry ingestion; documentation is not evidence of deployed monitoring."
+    },
+    {
+      "id": "S20",
+      "title": "Elastic Docker Compose installation",
+      "url": "https://www.elastic.co/docs/deploy-manage/deploy/self-managed/install-elasticsearch-docker-compose",
+      "coverage": "Official setup inspected 2026-10-27",
+      "note": "Security/password setup and localhost port binding; version pin, persistent volume and retention validation remain deployment prerequisites."
+    },
+    {
+      "id": "S21",
+      "title": "ATO tax invoices",
+      "url": "https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/tax-invoices",
+      "coverage": "Official page inspected 2026-10-27",
+      "note": "Required supplier/ABN/date/items/GST fields; buyer identity or ABN at AUD 1000 or more; applicable request timing."
+    },
+    {
+      "id": "S22",
+      "title": "ATO GST credits",
+      "url": "https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/claiming-gst-credits/when-you-can-claim-a-gst-credit",
+      "coverage": "Official page inspected 2026-10-27",
+      "note": "Registration, business use, GST in purchase and evidence conditions; valid tax invoice normally needed above AUD 82.50."
+    },
+    {
+      "id": "S23",
+      "title": "ATO business deductions",
+      "url": "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/income-and-deductions-for-business/deductions",
+      "coverage": "Official page inspected 2026-10-27",
+      "note": "Business purpose and records are required; exclude private portions and avoid deducting a GST amount already claimable as a credit."
+    },
+    {
+      "id": "S24",
+      "title": "Stripe webhook documentation",
+      "url": "https://docs.stripe.com/webhooks",
+      "coverage": "Official event behaviour and verification sections inspected 2026-10-27",
+      "note": "Verify raw-body signatures with official library, handle duplicate events, retries and unordered delivery."
+    },
+    {
+      "id": "S25",
+      "title": "Stripe idempotent requests",
+      "url": "https://docs.stripe.com/api/idempotent_requests",
+      "coverage": "Official API documentation inspected 2026-10-27",
+      "note": "Persist local operation IDs; API v1 idempotency retention does not provide indefinite deduplication."
+    },
+    {
+      "id": "S26",
+      "title": "ANZ PayTo",
+      "url": "https://www.anz.com.au/support/online-banking/payments/pay-to/",
+      "coverage": "Official product documentation inspected 2026-10-27",
+      "note": "Merchant creates agreement; account holder authorises it through banking channel. Not evidence of a universal personal-account payment API."
+    },
+    {
+      "id": "S27",
+      "title": "Kahneman and Tversky: Prospect Theory",
+      "url": "https://kahneman.scholar.princeton.edu/document/11",
+      "coverage": "Primary-source search extract; full methods queued",
+      "note": "Reference dependence and choice under risk inform hypotheses; trader behaviour must be measured rather than presumed."
+    },
+    {
+      "id": "S28",
+      "title": "Brock and Hommes: heterogeneous beliefs and routes to chaos",
+      "url": "http://research.economics.unsw.edu.au/vpanchenko/teaching/bh.pdf",
+      "coverage": "Primary paper discovered; full read queued",
+      "note": "Heterogeneous expectations provide a simulation candidate, not evidence that any observed market is deterministic chaos."
+    },
+    {
+      "id": "S29",
+      "title": "Gu et al.: S4",
+      "url": "https://arxiv.org/abs/2111.00396",
+      "coverage": "Primary abstract/search extract; v3 linked",
+      "note": "Structured long-memory baseline. Market evaluation remains separate from sequence benchmarks."
+    },
+    {
+      "id": "S30",
+      "title": "Orvieto et al.: Linear Recurrent Unit",
+      "url": "https://arxiv.org/abs/2303.06349",
+      "coverage": "Primary abstract/search extract",
+      "note": "Strong direct recurrence reference for matched-compute comparison; full methods reproduction queued."
+    },
+    {
+      "id": "S31",
+      "title": "Gu, Kelly and Xiu: empirical asset pricing via ML",
+      "url": "https://www.nber.org/papers/w25398",
+      "coverage": "Primary abstract/search extract; revised September 2019",
+      "note": "Nonlinear predictor interactions are existing financial research; replicate data and validation design before importing reported results."
+    }
+  ]
+}
