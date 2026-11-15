@@ -1,8 +1,22 @@
-\documentclass{amsart}
+\documentclass[11pt,a4paper]{amsart}
 
-\usepackage{a4wide}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype}
+\usepackage[a4paper,left=26mm,right=26mm,top=23mm,bottom=25mm,headheight=14pt]{geometry}
+\usepackage{tabularx,array,tikz,needspace}
+\usetikzlibrary{arrows.meta}
+\definecolor{river}{HTML}{155F62}
+\definecolor{ochre}{HTML}{9A502F}
+\definecolor{pencil}{HTML}{5C6568}
+\renewcommand{\arraystretch}{1.2}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\caslink}{https://github.com/nickyazdani9-ux/better_calculator/blob/6e75789b946429b259de33fb6c93be74dfc2b8a8/docs/ODE.md}
+\newcommand{\leanlink}{https://github.com/nickyazdani9-ux/mathematical-physics/blob/a90261232941f4dda5e8e8471cd1a58b3a053f52/mathematics/riccati_odes/RiccatiZoo.lean}
+\raggedbottom
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{hyperref}
+\usepackage[colorlinks=true,linkcolor=river,citecolor=river,urlcolor=river]{hyperref}
 \usepackage{url}
 \usepackage{booktabs}
 \usepackage{enumitem}
@@ -35,642 +49,469 @@
 Schwarzian derivative, autonomising coordinates, WKB approximation,
 Bessel functions, coupled coordinates}
 
-\date{March 2026}
+\date{March 2026. Expanded author-review edition, November 2026.}
 
+\hypersetup{pdftitle={What Is So Special About Special Functions?},pdfauthor={Nick Navid Yazdani}}
 \begin{document}
-
 \begin{abstract}
-The substitution $z = y'/y$ converts any second-order linear ODE
-$y'' + P(x)y' + Q(x)y = 0$ into the Riccati equation
-$z' = -z^2 - Pz - Q$, a flow on the complex plane whose constant
-fixed points yield exact solutions. Developing this viewpoint
-systematically, we verify it against every classical equation
-(constant-coefficient, Euler, Bessel, Airy, Hermite, Legendre) and
-observe a unifying pattern: in each case, the special function is a
-smooth trajectory on $\mathbb{C}$ connecting two asymptotic regimes
-whose autonomising coordinates are globally incompatible. The
-Schwarzian derivative emerges as the coordinate cost, and the Langer
-$\tfrac{1}{4}$ correction equals $\tfrac{1}{2}\{\ln x,\, x\}$
-exactly. An example is given showing that off-diagonal metric coupling
-on a 2-manifold can eliminate this two-regime incompatibility.
+Why does an exponential so often turn up as the first guess in a differential equation? I follow that question from an elementary growth law into the classical special functions. Dividing a curve's slope by its height gives one equation for all the families in this paper. Sometimes its solutions stand still. Sometimes they rotate or travel between two very different regimes. A Bessel wave simple enough to differentiate by hand lets us follow a single solution all the way. Along the way we recover the Langer quarter-term and find which part of a wave on a cone belongs to its choice of coordinates.
 \end{abstract}
-
 \maketitle
 
-%------------------------------------------------------------
 \section{Introduction}
-%------------------------------------------------------------
-
 I do not like ansatzes.
 
-The standard approach to solving a second-order linear ODE $y'' + P(x)y' + Q(x)y = 0$ proceeds by guessing a solution form (``try $y = e^{rx}$''), plugging it in, and extracting a polynomial whose roots determine the answer. This is correct. It is efficient. It works. I have no mathematical objection to it. But when someone asks ``what are the solutions of this equation?'' and the answer begins with ``first, guess that the solution is an exponential,'' something about that has always felt like a cheat. The question is about a differential equation. The answer should, at some level, involve the differential equation, not a guess that happens to work.
+An \emph{ansatz} is a proposed shape for an answer. In a first course on differential equations, a familiar instruction is “try an exponential”. Differentiate it twice, substitute, solve a quadratic. It works. I can follow every step after “try an exponential”. It is the step before it that I want to understand.
 
-The idea behind this paper is: what if, instead of guessing a solution form, you transform the equation into a flow on the complex plane and watch where it goes? The logarithmic derivative $z = y'/y$ converts any second-order linear ODE into a first-order Riccati equation $z' = -z^2 - Pz - Q$, which is a flow on~$\mathbb{C}$. The fixed points of this flow (where $z' = 0$) are the solutions. You don't guess them. You find them the way you find the equilibria of any dynamical system: set the velocity to zero and solve.
+Start with this little table. For the last row take \(x>0\), so its height is nonzero. A prime means a derivative with respect to \(x\).
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Height \(y(x)\) & Slope \(y'(x)\) & Slope divided by height \(y'(x)/y(x)\)\\
+\midrule
+\(e^x\)    & \(e^x\)     & \(1\)\\
+\(3e^x\)   & \(3e^x\)    & \(1\)\\
+\(e^{2x}\) & \(2e^{2x}\) & \(2\)\\
+\(x^2\)    & \(2x\)      & \(2/x\)\\
+\bottomrule
+\end{tabular}
+\end{center}
 
-This is not new mathematics. The Riccati substitution has been known since the 18th century~\cite{Riccati1724}; see~\cite{Ince1956, Reid1972} for textbook treatments. What follows is simply a systematic development of that substitution as a way to \emph{think about} what ODEs do; one that, for me, makes the geometry click in a way that ansatzes never did.
+Look at the first two rows. Tripling the height triples the slope. The last column cannot tell which row it came from. Now compare the first and third rows. At \(x=0\) both exponentials start at height one, but one grows twice as fast per unit of itself. The last column tells them apart everywhere. And then there is \(x^2\), for which the same measurement gives a different number at every \(x\). Keep that fourth row in mind.
 
-This does not replace the standard methods. Not in generality, not in rigour, not in anything. If you like ansatzes, keep using them. If, like me, you find it more natural to watch a flow find its own fixed points than to guess a solution and check it, this paper is for you.
+What if the equation itself could tell us what belongs in the last column? If it said that the fractional growth rate must stay at one, the exponential \(e^x\) would come out of the calculation. If it gave a changing rate, we could follow the change and see what curve it describes. That is the idea behind this paper.
 
-What I develop here:
-\begin{enumerate}[label=(\roman*)]
-\item the Riccati transformation and the proof that fixed points yield solutions,
-\item verification against every standard class of ODE (constant-coefficient, Euler, Bessel, Airy, Hermite, Legendre),
-\item a demonstration that the flow lives naturally on~$\mathbb{C}$, and that restricting to~$\mathbb{R}$ creates artificial singularities (poles at zeros of~$y$),
-\item the identification of the Schwarzian derivative as the geometric cost of coordinate changes, and the Langer $\tfrac{1}{4}$ correction as a specific instance,
-\item a classification of ``special functions'' as smooth trajectories on~$\mathbb{C}$ connecting two fixed-point regimes that cannot be simultaneously autonomised,
-\item a demonstration that coupling coordinates on a 2-manifold can eliminate the two-patch incompatibility entirely, reducing Level~2 equations to Level~1, and
-\item numerical verification of every claim to machine precision.
-\end{enumerate}
+There is a good reason to ask the question of a Bessel function or an Airy function as well. We already accept that an equation can tell us what a function \emph{is}. Take the curve that starts at height zero with slope one, and whose second derivative everywhere equals minus its height. We call it \(\sin x\). A special-function name plays much the same role. The equation supplies a family of possible curves. A starting condition, symmetry, or behaviour at a boundary selects a particular member.
 
-Throughout, I restrict to second-order linear ODEs, which covers the classical special functions. The Riccati viewpoint extends to higher-order equations via matrix Riccati equations, but that is beyond the present scope.
+The substitution is classical~\cite{Ince1956,Reid1972}. I wanted to see how far one question would take me. A spring and a power law will supply the two halves of a Bessel wave. By the time we reach the cone we will have to ask how much of the turning is ours.
 
-%------------------------------------------------------------
-\section{Definitions}
-%------------------------------------------------------------
+\section{A few definitions, as we need them}
+An \emph{ordinary differential equation} (ODE) involves a function of one independent variable and its derivatives. Here \(y'\) is how fast the height changes and \(y''\) is how fast its slope changes. The highest derivative we use is the second. Our equations have the form
+\begin{equation}\label{eq:usual}
+ y''+P(x)y'+Q(x)y=0 .
+\end{equation}
+The functions \(P\) and \(Q\) are the \emph{coefficients}. They are the information we are given. \emph{Linear} means that the equation takes a weighted sum of \(y'',y',y\). \emph{Homogeneous} means there is no independent forcing term. One immediate consequence is that if \(y\) solves it, then so does \(3y\). Another is that solutions can be added. If the input has a coefficient in front of \(y''\), we first divide by that coefficient on an interval where it is nonzero.
 
-\begin{definition}[Logarithmic Derivative]
-Let $y\colon I \to \mathbb{C}$ be differentiable and nonvanishing on an interval~$I$. The logarithmic derivative of~$y$ is
+\begin{definition}[Logarithmic derivative]
+On a part of a curve where \(y(x)\ne0\), write
 \[
-z(x) = \frac{y'(x)}{y(x)} = \frac{d}{dx}\bigl[\ln y(x)\bigr].
+ z(x)=\frac{y'(x)}{y(x)}.
 \]
-It measures the fractional rate of change of~$y$: ``what fraction of itself is~$y$ changing by per unit of~$x$?''
+It measures the fractional rate of change of \(y\). What fraction of itself is \(y\) changing by per unit of \(x\)?
 \end{definition}
+For example, a tank holding 10 litres and filling at 2 litres per minute has \(z=0.2\) per minute at that instant. For positive real \(y\), the chain rule says that \(\dif(\log y)/\dif x=y'/y\). That accounts for the name. The quotient itself works for negative or complex values as well, wherever the denominator is nonzero.
 
-\begin{definition}[Riccati Equation]
-A first-order ODE of the form
-\[
-z' = a(x)\,z^2 + b(x)\,z + c(x)
-\]
-is called a Riccati equation. It is the simplest nonlinear first-order ODE (the nonlinearity is the~$z^2$ term).
-\end{definition}
+\section{From the original equation to Riccati}
+We know what \(z\) measures. What can we say about how \emph{it} changes? The quotient rule lets us keep track of both the slope and the height.
+\begin{align*}
+ z'&=\frac{y''y-(y')^2}{y^2}
+     =\frac{y''}{y}-\left(\frac{y'}{y}\right)^2\\
+   &=\frac{y''}{y}-z^2 .
+\end{align*}
+Now the original equation enters. Equation~\eqref{eq:usual} tells us \(y''=-Py'-Qy\). After dividing by \(y\), that is \(y''/y=-Pz-Q\). One substitution finishes the derivation.
 
-\begin{definition}[Schwarzian Derivative]
-Let $s\colon I \to \mathbb{R}$ be three times differentiable with $s' \neq 0$. The Schwarzian derivative of~$s$ with respect to~$x$ is
-\[
-\{s, x\} = \frac{s'''}{s'} - \frac{3}{2}\left(\frac{s''}{s'}\right)^{\!2}.
-\]
-It measures the ``projective curvature'' of the coordinate change $x \mapsto s(x)$~\cite{Cayley1880, Osgood1998}. It vanishes precisely for M\"obius transforms $s = (ax+b)/(cx+d)$.
-\end{definition}
-
-\begin{definition}[Autonomous ODE]
-An ODE is autonomous if its right-hand side does not depend explicitly on the independent variable. For a Riccati equation $z' = -z^2 + c$ with~$c$ constant, the equation is autonomous: the flow arrows are the same at every point.
-\end{definition}
-
-\begin{definition}[Autonomising Coordinate]
-Given an ODE that is non-autonomous in $x$-coordinates, an autonomising coordinate is a function $s = s(x)$ such that, in $s$-coordinates, the ODE becomes autonomous.
-\end{definition}
-
-%------------------------------------------------------------
-\section{From ODE to Riccati: the logarithmic derivative}
-%------------------------------------------------------------
-
-\begin{theorem}\label{thm:ode-to-riccati}
-Let $y'' + P(x)\,y' + Q(x)\,y = 0$ be a second-order linear ODE. The substitution $z = y'/y$ transforms it into the Riccati equation
-\[
-z' = -z^2 - P(x)\,z - Q(x).
-\]
+\begin{theorem}[Riccati transformation]\label{thm:ode-to-riccati}
+On a zero-free interval, the logarithmic derivative of a twice differentiable solution of~\eqref{eq:usual} obeys
+\begin{equation}\label{eq:riccati}
+ \frac{\dif z}{\dif x}=-z^2-P(x)z-Q(x).
+\end{equation}
 \end{theorem}
+A first-order equation whose right-hand side is a polynomial of degree two in the unknown is called a \emph{Riccati equation}. At each \(x\), give~\eqref{eq:riccati} a possible value of \(z\) and it gives you a velocity \(z'\). On the real line a positive velocity points right and a negative one points left. For a complex \(z\), the velocity has two components and points across a plane. Following those arrows is what I mean by following the \emph{flow}.
 
-\begin{proof}
-We have $z = y'/y$. Differentiating with respect to~$x$ using the quotient rule:
-\[
-z' = \frac{d}{dx}\!\left(\frac{y'}{y}\right) = \frac{y''\cdot y - y'\cdot y'}{y^2} = \frac{y''}{y} - \left(\frac{y'}{y}\right)^{\!2} = \frac{y''}{y} - z^2.
-\]
-From the ODE: $y'' = -P\,y' - Q\,y$, so $y''/y = -P(y'/y) - Q = -Pz - Q$. Substituting:
-\[
-z' = (-Pz - Q) - z^2 = -z^2 - Pz - Q. \qedhere
-\]
-\end{proof}
+Notice what has happened to the data. The two functions \(P,Q\) are still there. The law for reading them is now the same for every equation of the form~\eqref{eq:usual}. This is the first sense in which the families are unified. To see whether we have lost anything important, we have to go back the other way.
 
 \begin{theorem}[Recovery]\label{thm:recovery}
-If $z(x)$ satisfies the Riccati equation $z' = -z^2 - Pz - Q$ on an interval~$I$, then
-\[
-y(x) = \exp\!\left(\int z(x)\,dx\right)
-\]
-satisfies the original ODE $y'' + Py' + Qy = 0$ on~$I$.
+Let a continuous \(z\) solve~\eqref{eq:riccati} on an interval containing \(a\). For a chosen starting height \(A\ne0\), the function
+\begin{equation}\label{eq:recover}
+ y(x)=A\exp\!\left(\int_a^x z(t)\,\dif t\right)
+\end{equation}
+has \(y(a)=A\), has logarithmic derivative \(z\), and solves~\eqref{eq:usual} there.
 \end{theorem}
-
 \begin{proof}
-From $z = y'/y$ we have $y'/y = z$, so $\frac{d}{dx}[\ln y] = z$, giving $\ln y = \int z\,dx + C$, hence $y = A\cdot\exp(\int z\,dx)$ for some constant~$A$. Since the ODE is linear and homogeneous, the constant~$A$ is absorbed into the arbitrary scaling of solutions.
+The fundamental theorem of calculus tells us that the derivative of the integral is \(z(x)\). The chain rule then gives \(y'=zy\). Differentiate the product once more to get \(y''=(z'+z^2)y\). The original left-hand side is \((z'+z^2+Pz+Q)y=0\).
 \end{proof}
+So the missing measurement is the height at a single point. There is even a short way to prove that this is \emph{all} we lost. Suppose two nonvanishing curves \(f,g\) have the same last column throughout an interval. Cross-multiplication gives \(f'g=fg'\). By the quotient rule, \((f/g)'=0\). Their ratio is constant. That is precisely why the first two rows of the opening table were indistinguishable.
 
-%------------------------------------------------------------
 \section{Fixed points and solutions}
-%------------------------------------------------------------
+Imagine following the arrows of~\eqref{eq:riccati}. What would it mean for one arrow to have zero length? At that position, the fractional rate itself would have zero velocity. If a number \(r\) has that property for every \(x\) in the interval, then \(z(x)=r\) can stay there. Such a constant solution of the flow is a \emph{fixed point}. The height of the original curve can be changing quite rapidly while its fractional rate stands still.
 
-\begin{definition}[Fixed Point]
-A fixed point of the Riccati equation $z' = -z^2 - Pz - Q$ is a value~$z^*$ (possibly depending on~$x$) at which $z' = 0$:
-\[
-(z^*)^2 + P(x)\cdot z^* + Q(x) = 0.
-\]
-This is a quadratic in~$z^*$, yielding two roots:
-\[
-z^* = \frac{-P \pm \sqrt{P^2 - 4Q}}{2}.
-\]
-\end{definition}
-
-\begin{theorem}[Fixed Points Yield Solutions]\label{thm:fixed-pts}
-If $z^*$ is a constant fixed point (independent of~$x$) of the Riccati equation, then $y = e^{z^* x}$ is an exact solution of the original ODE.
+\begin{theorem}[Fixed points yield solutions]\label{thm:fixed-pts}
+If a constant \(r\) satisfies \(r^2+P(x)r+Q(x)=0\) throughout an interval, then \(e^{rx}\) is an exact solution of~\eqref{eq:usual}.
 \end{theorem}
-
 \begin{proof}
-If $z^*$ is constant, then $z' = 0$, and the Riccati equation gives $(z^*)^2 + P\cdot z^* + Q = 0$. This is precisely the condition for $y = e^{z^* x}$ to satisfy $y'' + Py' + Qy = 0$, since $y' = z^*\,y$ and $y'' = (z^*)^2\,y$.
+With \(z=r\), equation~\eqref{eq:riccati} reads \(0=-r^2-Pr-Q\). The integral in~\eqref{eq:recover} becomes \(r(x-a)\). A constant multiple of \(e^{rx}\) follows.
 \end{proof}
 
-\begin{remark}
-This is not a new result. It is the standard characteristic equation in disguise: the condition $(z^*)^2 + Pz^* + Q = 0$ is exactly the characteristic polynomial $r^2 + Pr + Q = 0$ with $r = z^*$~\cite{Ince1956, CodLev1955}. The point is not that the result is new, but that the derivation is different. We did not guess $y = e^{rx}$. We set $z = y'/y$, found the flow, and asked where it stops. The exponential emerged because ``constant logarithmic derivative'' means ``constant fractional rate of change,'' which is the definition of exponential growth. The result that knowledge of one particular Riccati solution yields the general solution via quadrature is due to Euler~\cite{Euler1762}; see also~\cite{Reid1972}.
-\end{remark}
-
-\begin{remark}[Non-Constant Fixed Points and WKB]
-When $P$ and $Q$ depend on~$x$, the fixed points $z^* = (-P \pm \sqrt{P^2 - 4Q})/2$ also depend on~$x$. Setting $z' = 0$ gives the \emph{instantaneous} equilibrium: the value the flow would converge to if the coefficients froze at their current values. Using $y = \exp(\int z^*(x)\,dx)$ with these $x$-dependent fixed points gives the WKB approximation. The WKB ``approximation'' is not a separate technique; it is the natural consequence of using instantaneous fixed points of a non-autonomous Riccati flow.
-\end{remark}
-
-%------------------------------------------------------------
 \section{Worked verifications}
-%------------------------------------------------------------
-
-\subsection{Constant coefficients}
-
-\textbf{Equation:} $y'' - 3y' + 2y = 0$. Here $P = -3$, $Q = 2$.
-
-\textbf{Riccati:} $z' = -z^2 + 3z - 2$.
-
-\textbf{Fixed points:} $z^2 - 3z + 2 = (z-1)(z-2) = 0$, so $z^* = 1$ and $z^* = 2$.
-
-\textbf{Solutions:} $y_1 = \exp(\int 1\,dx) = e^x$, \quad $y_2 = \exp(\int 2\,dx) = e^{2x}$.
-
-\textbf{Verification:} $y_1 = e^x$: $y'' - 3y' + 2y = e^x - 3e^x + 2e^x = 0$. \checkmark
-
-\subsection{Harmonic oscillator}
-
-\textbf{Equation:} $y'' + \omega^2 y = 0$. Here $P = 0$, $Q = \omega^2$.
-
-\textbf{Riccati:} $z' = -z^2 - \omega^2$.
-
-\textbf{Fixed points:} $z^2 + \omega^2 = 0$, so $z^* = \pm i\omega$.
-
-\textbf{Solutions:} $y = e^{\pm i\omega x}$.
-
-The fixed points are \emph{imaginary}. This is not a pathology; it is the origin of oscillation. Real fixed points produce exponential growth or decay. Imaginary fixed points produce oscillation. The distinction between these two behaviours (which textbooks treat as qualitatively different) is, in the Riccati picture, simply the distinction between real and imaginary parts of a complex number.
-
-Verified symbolically: residual~$= 0$. \checkmark
-
-\subsection{Euler equation}
-
-\textbf{Equation:} $(1+u)^2 F'' + (1+u)F' - 2\ell^2 F = 0$.
-
-Standard form: $F'' + \frac{1}{1+u}F' - \frac{2\ell^2}{(1+u)^2}F = 0$.
-
-\textbf{Riccati:} $z' = -z^2 - \frac{z}{1+u} + \frac{2\ell^2}{(1+u)^2}$.
-
-This equation is non-autonomous. But the coordinate change $s = \ln(1+u)$ makes it autonomous. Define $z_s = dF/ds \cdot 1/F = (1+u)\cdot z_u$. In $s$-coordinates:
+\subsection{Where the exponential came from}
+Take the classroom equation
 \[
-\frac{dz_s}{ds} = -z_s^2 + 2\ell^2.
+ y''-3y'+2y=0 .
 \]
-\textbf{Fixed points:} $z_s^2 = 2\ell^2$, so $z_s = \pm\ell\sqrt{2}$.
-
-\textbf{Solutions:} $F = e^{\pm\ell\sqrt{2}\,s} = (1+u)^{\pm\ell\sqrt{2}}$.
-
-\textbf{Key observation:} The ``ansatz'' $F = (1+u)^r$ is not a guess. It is the statement $y = \exp(\int z^*\,ds) = \exp(r\cdot s) = \exp(r\cdot\ln(1+u)) = (1+u)^r$, where $z^* = r$ is the constant fixed point in log coordinates. The ansatz is the coordinate change written backwards.
-
-Verified symbolically: residual~$= 0$. \checkmark
-
-\subsection{Bessel equation}
-
-\textbf{Equation:} $x^2 y'' + xy' + (x^2 - n^2)y = 0$.
-
-Standard form: $y'' + \frac{1}{x}y' + \left(1 - \frac{n^2}{x^2}\right)y = 0$.
-
-\textbf{Riccati:} $z' = -z^2 - \frac{z}{x} - 1 + \frac{n^2}{x^2}$.
-
-This equation has \emph{two} asymptotic regimes with \emph{incompatible} autonomising coordinates:
-
-\textbf{Near $x = 0$:} The $n^2/x^2$ term dominates. Setting $z \approx c/x$ and balancing: $c^2 - c = n^2$, giving $c \approx \pm n$ for large~$n$. This is the Euler regime: $s = \ln(x)$ autonomises locally, giving power-law solutions $y \sim x^{\pm n}$.
-
-\textbf{Near $x = \infty$:} The constant terms dominate: $z' \approx -z^2 - 1$. Fixed points: $z = \pm i$. This is the constant-coefficient regime: $s = x$ autonomises, giving plane-wave solutions $y \sim e^{\pm ix}$.
-
-\textbf{The Bessel function $J_n(x)$} is the unique trajectory of the Riccati flow on~$\mathbb{C}$ that connects the power-law fixed point $z \approx n/x$ at the origin to the plane-wave fixed point $z \approx i$ at infinity~\cite{Watson1944, AbSt1972}. It is smooth on~$\mathbb{C}$ (see Section~\ref{sec:complex}). The ``transcendental'' nature of~$J_n$ is not intrinsic complexity; it is the cost of interpolating between two coordinate patches ($\ln x$ and~$x$) that are globally incompatible.
-
-\subsection{Airy equation}
-
-\textbf{Equation:} $y'' - xy = 0$. Here $P = 0$, $Q = -x$.
-
-\textbf{Riccati:} $z' = -z^2 + x$.
-
-\textbf{Fixed points:} $z^2 = x$.
-
-For $x > 0$: $z^* = \pm\sqrt{x}$ (real), producing exponential growth/decay. For $x < 0$: $z^* = \pm i\sqrt{|x|}$ (imaginary), producing oscillation. At $x = 0$: the fixed points collide at $z = 0$.
-
-The Airy function $\mathrm{Ai}(x)$~\cite{AbSt1972, Olver1974} is the trajectory that selects the decaying branch ($z \to -\sqrt{x}$) for $x > 0$ and the oscillatory branch ($z \to i\sqrt{|x|}$) for $x < 0$, passing smoothly through the coalescence at $x = 0$.
-
-%------------------------------------------------------------
-\section{The complex plane: why $\mathbb{R}$ creates artificial singularities}\label{sec:complex}
-%------------------------------------------------------------
-
-The Riccati equation $z' = -z^2 - Pz - Q$ defines a flow on~$\mathbb{C}$, not on~$\mathbb{R}$~\cite{Hille1997}. When we restrict the flow to the real line, artificial singularities appear.
-
-Consider the Bessel case. If we use $y = J_n(x)$ (a real solution), then $z = J_n'/J_n$ has poles at every zero of~$J_n$. These poles look like singularities: the logarithmic derivative blows up to~$\pm\infty$. But they are not singularities of the flow. They are artefacts of~$z$ passing through the point at infinity on the Riemann sphere $\mathbb{C} \cup \{\infty\}$. On the Riemann sphere, $\infty$ is an ordinary point, and the flow passes through it smoothly.
-
-\textbf{The fix:} use a complex solution. The Hankel function $H_n^{(1)} = J_n + i\,Y_n$ has no zeros on the positive real line (its real and imaginary parts do not vanish simultaneously). Therefore $z = (H_n^{(1)})' / H_n^{(1)}$ is smooth for all $x > 0$.
-
-For large~$x$, the Hankel function satisfies $H_n^{(1)}(x) \sim \sqrt{2/(\pi x)}\cdot e^{i(x - n\pi/2 - \pi/4)}$. The logarithmic derivative is:
+Read off \(P=-3,\ Q=2\). The fractional rate follows
 \[
-z = \frac{(H_n^{(1)})'}{H_n^{(1)}} \;\longrightarrow\; i - \frac{1}{2x} + O(1/x^2).
+ z'=-z^2+3z-2=-(z-1)(z-2).
 \]
-The real part $-1/(2x)$ is the amplitude decay (the $1/\sqrt{x}$ envelope of Bessel functions). The imaginary part~$1$ is the oscillation frequency. Both are directly readable from the Riccati flow on~$\mathbb{C}$.
+At \(z=1\) and \(z=2\) the velocity vanishes. Recover the heights. A curve that grows by one unit per unit of itself is \(Ae^x\). At twice that rate it is \(Be^{2x}\). We set \(z=y'/y\), found the flow, and asked where it stops. The exponential appeared at the \emph{end} of the argument.
 
-This is verified numerically in Section~\ref{sec:numerical}: the Riccati equation is satisfied to better than $10^{-7}$ at every test point, and the flow is smooth everywhere on~$\mathbb{C}$.
-
-%------------------------------------------------------------
-\section{The Schwarzian derivative and the Langer $\tfrac{1}{4}$}
-%------------------------------------------------------------
-
-When changing coordinates $x \to s(x)$ in a second-order ODE, the potential transforms. The transformation rule involves the Schwarzian derivative~\cite{Cayley1880, Nehari1949}.
-
-\begin{theorem}[Normal Form Reduction]\label{thm:normal-form}
-Any ODE $y'' + Py' + Qy = 0$ can be reduced to a normal form $h'' + q(x)\,h = 0$ (no first derivative) via $y = \mu\cdot h$ with $\mu = \exp(-\tfrac{1}{2}\int P\,dx)$. The effective potential is $q = Q - P'/2 - P^2/4$.
-\end{theorem}
-
-\begin{theorem}[Schwarzian Transformation Rule]\label{thm:schwarzian}
-Under $x \to s(x)$, the normal-form equation $h'' + q(x)\,h = 0$ transforms to $H'' + \mathcal{Q}(s)\,H = 0$ via $h = (s')^{-1/2}\cdot H$, where
+Are there other slopes? Take \(y=e^x+e^{2x}\). At \(x=0\) its height is two and its slope is three. So \(z=3/2\), right between the two fixed points. In fact
 \[
-\mathcal{Q}(s) = \frac{q(x) - \tfrac{1}{2}\{s, x\}}{(s')^2}.
+ z=\frac{e^x+2e^{2x}}{e^x+e^{2x}}
+   =1+\frac{e^x}{1+e^x}.
 \]
-The quantity $\tfrac{1}{2}\{s, x\}$ is the geometric cost of the coordinate change.
-\end{theorem}
+Far to the left, \(e^x\) wins the competition between the two terms in \(y\), and \(z\) is close to one. Far to the right, \(e^{2x}\) wins, and \(z\) is close to two. In between, at \(z=3/2\), the equation itself gives \(z'=1/4>0\). We can watch the curve change its mind about which exponential it most resembles.
 
-\textbf{Application: the Langer correction.} For the Euler equation with $s = \ln(1+u)$:
-\begin{align*}
-s' &= \frac{1}{1+u}, \quad s'' = \frac{-1}{(1+u)^2}, \quad s''' = \frac{2}{(1+u)^3}.
-\end{align*}
-Computing:
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1.03cm,y=1.75cm,>=Stealth,font=\small]
+ \draw[->,pencil] (-3.8,0.91)--(3.95,0.91) node[right] {$x$};
+ \draw[->,pencil] (-3.57,.86)--(-3.57,2.2) node[above] {$z$};
+ \draw[densely dashed,pencil] (-3.55,1)--(3.55,1);
+ \draw[densely dashed,pencil] (-3.55,2)--(3.55,2);
+ \node[left] at (-3.57,1) {$1$}; \node[left] at (-3.57,2) {$2$};
+ \draw[river,very thick,domain=-3.5:3.5,samples=85] plot (\x,{1+exp(\x)/(1+exp(\x))});
+ \fill[ochre] (0,1.5) circle (1.9pt);
+ \node[above left] at (0,1.5) {$z(0)=3/2$};
+ \draw[pencil] (0,.88)--(0,.94); \node[below] at (0,.88) {$0$};
+\end{tikzpicture}
+\caption{One actual solution of the slope equation. The two horizontal lines are themselves solutions. The curve between them comes from adding the two exponential modes with equal weights.}\label{fig:mixed}
+\end{figure}
+
+There are enough weights \(A,B\) to fit any initial height and slope. At zero these measurements are \(A+B\) and \(A+2B\). They determine \(A,B\) uniquely. The usual uniqueness theorem for a linear initial-value problem therefore gives the full solution \(Ae^x+Be^{2x}\)~\cite{CodLev1955}. When the quadratic has a double root \(r\), the second mode is \(xe^{rx}\). Its fractional rate is \(r+1/x\) off zero. Simply listing distinct fixed points would miss it.
+
+\subsection{How a spring turns a growth rate into a rotation}
+Give a spring a displacement \(y\). Its acceleration points back towards the middle and is proportional to that displacement. In suitable units the equation is \(y''+\omega^2 y=0\), where \(\omega>0\) sets the speed of the oscillation. The same recipe gives \(z'=-z^2-\omega^2\). A fixed point must obey \(z^2=-\omega^2\). This time both answers are imaginary, \(z=\pm\ii\omega\).
+
+How can a growth rate be imaginary? Draw a complex number as an arrow from the origin. Multiplying by \(\ii\) turns it through a right angle. If \(y'=\ii\omega y\), the velocity is always perpendicular to the arrow from the origin. Its tip traces a circle. In symbols, \(e^{\ii\omega x}=\cos(\omega x)+\ii\sin(\omega x)\). Project that circle onto a single axis and you see a spring going back and forth. A real part of \(z\) changes the length. An imaginary part changes the angle.
+
+More generally, write a nonvanishing wave locally as \(y=R e^{\ii\theta}\), where \(R>0\) is its length and \(\theta\) its angle. The product rule gives \(y'/y=R'/R+\ii\theta'\). We will use both readings at once when we reach Bessel.
+
+\subsection{Euler's equation on a different clock}
+Return to \(x^2\), the fourth row of the table. Its fractional rate \(2/x\) varies. But sample the curve at \(x=1,2,4,8\). Its height goes \(1,4,16,64\). Each doubling does \emph{exactly} the same thing. On the scale \(s=\log x\), consecutive doublings are the same distance apart, because \(\log(2x)-\log x=\log 2\). On that scale \(x^2=e^{2s}\) has constant fractional rate two.
+
+The Euler equation in this paper is
 \[
-\{s, u\} = \frac{s'''}{s'} - \frac{3}{2}\left(\frac{s''}{s'}\right)^{\!2} = \frac{2}{(1+u)^2} - \frac{3}{2}\cdot\frac{1}{(1+u)^2} = \frac{1}{2(1+u)^2}.
+ (1+u)^2F''+(1+u)F'-2\ell^2 F=0.
 \]
-Therefore $\tfrac{1}{2}\{s, u\} = \frac{1}{4(1+u)^2}$.
-
-The Euler equation in Schr\"odinger normal form has effective potential $q(u) = (2\ell^2 - \tfrac{1}{4})/(2(1+u)^2)$. The $-\tfrac{1}{4}$ in the numerator is exactly the contribution of $\tfrac{1}{2}\{\ln(1+u),\, u\}$~\cite{Langer1937}. It is not a WKB artefact. It is not an approximation error. It is the geometric price of using logarithmic coordinates.
-
-%------------------------------------------------------------
-\section{The autonomy condition}
-%------------------------------------------------------------
-
-\begin{definition}\label{def:autonomise}
-A coordinate change $s(x)$ \emph{autonomises} the normal-form equation $h'' + q(x)\,h = 0$ if, in $s$-coordinates, the equation becomes $H'' + c\,H = 0$ for some constant~$c$.
-\end{definition}
-
-\begin{theorem}\label{thm:autonomy}
-The autonomy condition is:
+Take \(t=1+u>0\) and \(s=\log t\). The symbol \(\ell\) is a fixed number. It will acquire a physical meaning on the cone. Since \(\dif/\dif s=t\,\dif/\dif t\), the fractional rate measured with our new clock is \(W=F_s/F=tF_t/F\). Direct differentiation gives \(F_{ss}=t^2F_{tt}+tF_t\). The entire Euler equation has become \(F_{ss}-2\ell^2 F=0\), hence
 \[
-q(x) = c\cdot(s')^2 + \tfrac{1}{2}\{s, x\}.
+ \frac{\dif W}{\dif s}=2\ell^2-W^2,\qquad W^*=\pm\ell\sqrt2 .
 \]
-\end{theorem}
+Recover the height in \(s\) and return to \(u\). This gives \(F=e^{\pm\ell\sqrt2\,s}=(1+u)^{\pm\ell\sqrt2}\). The ansatz is the coordinate change written backwards. For \(\ell=0\) the repeated exponent gives \(1\) and \(\log(1+u)\).
 
-\begin{observation}[Two Dominant Autonomising Patterns]\label{obs:two-coords}
-In every classical equation examined in this paper, the autonomising coordinate is either $s = x$ (the identity, already a plane wave) or $s = \ln(x)$ (the logarithm, converting power laws to exponentials). Whether other autonomising coordinates arise in equations beyond those studied here is an open question.
-\end{observation}
+An equation is called \emph{autonomous} when its rule for velocity has no explicit dependence on the clock. Here the change to \(s\) made Euler autonomous everywhere on \(t>0\). It is tempting to try the very same trick on the next equation. That is where the special functions enter.
 
-\begin{observation}[Classification by Autonomy]\label{obs:classification}
-This gives a hierarchy of difficulty:
+\subsection{The extra term in Bessel's equation}
+Put two equations side by side. Use \(x>0\), and let the nonnegative number \(\nu\) set the power in the Euler equation.
+\[
+ \underbrace{x^2y''+xy'-\nu^2y}_{\text{Euler}}=0,
+ \qquad
+ \underbrace{x^2y''+xy'-\nu^2y}_{\text{the very same terms}}+x^2y=0.
+\]
+The equation on the right is Bessel's. What could one extra term do? Close to zero its coefficient is tiny. Far away its coefficient grows without bound. Euler's clock ought to work at one end. There is good reason to wonder what happens at the other.
 
-\emph{Level~0: Globally autonomous.} $P$, $Q$ constant. $s = x$ works everywhere. Solutions are exponentials and trigonometric functions.
+Reuse \(s=\log x\) and write \(W=xz\). Since \(\dif/\dif s=x\,\dif/\dif x\),
+\[
+ \frac{\dif W}{\dif s}=xz+x^2z'
+       =\nu^2-W^2-\underbrace{e^{2s}}_{x^2}.
+\]
+The new term has survived the change of clock. As \(s\) goes far to the left it tends to zero, leaving the Euler rule \(W_s=\nu^2-W^2\). For \(\nu>0\) the steady values of that limiting rule are \(+\nu,-\nu\). They are the fractional rates, per unit of \(\log x\), of the familiar powers \(x^\nu,x^{-\nu}\). At order zero the exponents coincide and a logarithmic solution appears~\cite{NISTBessel}.
 
-\emph{Level~1: Globally autonomisable by a single coordinate change.} The Euler equation: $s = \ln(x)$. Solutions are power laws.
+On the ordinary \(x\) scale the same equation reads
+\begin{equation}\label{eq:besselslope}
+ z'=-z^2-\frac{z}{x}-1+\frac{\nu^2}{x^2}.
+\end{equation}
+Far to the right, for bounded \(z\), the right-hand side approaches the oscillator's rule \(z'=-z^2-1\). We have met its two steady values too, \(+\ii,-\ii\). Near one end the natural comparison is a power. Near the other it is a rotating wave. We derived both comparisons before looking up a Bessel function.
 
-\emph{Level~2: Locally autonomisable in two incompatible patches.} Bessel ($\ln x$ near origin, $x$ at infinity), Airy ($x^{3/2}$ for $x > 0$, different for $x < 0$), Hermite ($x$ near origin, $x^2/2$ at infinity). The special function is the transition map between patches.
-\end{observation}
+A \emph{regime} is a range of \(x\) in which particular terms dominate. An \emph{asymptotic} description tells us what becomes accurate as we go to an endpoint. If a road is straight at the beginning and straight again at the far end, knowing both bearings still leaves a great many possible roads between them. The differential equation governs the intervening stretch. To follow an actual Bessel wave, we must also say which solution we chose. We will do that in Section~\ref{sec:complex}, where one wave admits an unusually good view of the entire road.
 
-%------------------------------------------------------------
-\section{The unification table}
-%------------------------------------------------------------
+\subsection{Where an Airy wave turns}
+Bessel changes character as two terms trade importance. Airy lets us watch a change of character take place at a single point. Its equation is \(y''=xy\). For \(x>0\) a positive displacement has positive curvature, as an increasing or decreasing exponential can. For \(x<0\) the curvature points back towards zero, as it does for a spring. The change of sign at zero is why this point is called a \emph{turning point}.
 
-\begin{center}
-\begin{tabular}{llllp{3cm}}
+The fractional-rate rule is \(z'=x-z^2\). Hold the value of \(x\) still for an instant and ask which \(z\) would give zero velocity. For \(x>0\) the answers are \(\pm\sqrt{x}\). For \(x<0\) they are \(\pm\ii\sqrt{|x|}\). These are \emph{frozen roots}. The word \emph{frozen} matters. If \(z=-\sqrt{x}\) really solved the equation, the right-hand side would be zero while the left would be \(-1/(2\sqrt{x})\).
+
+The classical solution called \(\mathrm{Ai}\) is selected by its decay on the positive side and a conventional normalisation. Across zero, the same real solution oscillates and crosses the horizontal axis repeatedly~\cite{NISTAiry}. What becomes of \(y'/y\) at one of those crossings? That question brings us back to something we passed over in the definition.
+
+\section{The complex plane and the trouble with zeros}\label{sec:complex}
+Take the spring again. At \(x=0\) the curve \(y=\sin x\) goes through the middle at full speed. Its height is zero, its slope is one, and the spring is doing something perfectly ordinary. Yet \(z=\cos x/\sin x\) has blown up. It is our measurement that has run out of room.
+
+A line drawn through the origin can be described by its slope until the line goes vertical. Near vertical it is easier to say how far it goes sideways for one unit up. The same trick works for the pair \((y,y')\). Near a point where \(y=0\) and \(y'\ne0\), use the reciprocal reading
+\[
+ w=\frac{y}{y'},\qquad
+ w'=\frac{(y')^2-yy''}{(y')^2}=1+P(x)w+Q(x)w^2 .
+\]
+For the spring, \(z=\cot x\) and \(w=\tan x\). Near zero the second reading passes smoothly through zero with derivative one. Where both make sense they satisfy \(zw=1\). Mathematicians call these two readings \emph{charts} and the direction specified by \((y,y')\) a \emph{projective} point. Both words refer to the business of recording a direction when its overall size is irrelevant. With continuous \(P,Q\), uniqueness also tells us that a nontrivial solution cannot have \(y=y'=0\) at an ordinary point.
+
+Bessel gives us a separate choice. Two real solutions, traditionally called \(J_\nu,Y_\nu\), can be combined into the complex wave \(H^{(1)}_\nu=J_\nu+\ii Y_\nu\). This time we \emph{are} choosing a different solution. On the positive real axis for real order, the identity \(J_\nu Y_\nu'-J_\nu'Y_\nu=2/(\pi x)\) says that the pair never vanishes together. (If they both vanished, the left side would be zero.) The combination therefore has a well-defined \(z\) there. Far from the origin it has the advancing phase \(e^{\ii x}\), up to a constant phase offset. With the usual time factor \(e^{-\ii t}\), a point of fixed phase moves outwards as time passes. This is the \emph{outgoing Hankel wave}. A real \(J_\nu\) has its own zeros and its own trajectory~\cite{NISTBessel}.
+
+\subsection{A Bessel wave we can follow all the way}
+Take order \(\nu=1/2\). Up to an overall constant the outgoing wave is~\cite{NISTBessel}
+\begin{equation}\label{eq:half}
+ y(x)=\frac{e^{\ii x}}{\sqrt{x}},\qquad x>0 .
+\end{equation}
+There is a circle in the numerator and an envelope in the denominator. One turn of the arrow takes \(2\pi\) units of \(x\) everywhere. As the arrow turns, it gets shorter. Differentiate \(x^{-1/2}e^{\ii x}\) by the product rule and divide the result by \(y\). This time both parts are visible in one line.
+\begin{equation}\label{eq:halfslope}
+ z=\underbrace{-\frac{1}{2x}}_{\text{fractional change in length}}
+      +\underbrace{\ii}_{\text{change in angle}} .
+\end{equation}
+Does it really solve Bessel's equation? The derivative of the last expression is \(z'=1/(2x^2)\). With \(\nu=1/2\), the right-hand side of~\eqref{eq:besselslope} is
+\[
+ -\left(\ii-\frac{1}{2x}\right)^2
+ -\frac{1}{x}\left(\ii-\frac{1}{2x}\right)-1+\frac{1}{4x^2}
+ =\frac{1}{2x^2}.
+\]
+Every cancellation holds for every positive \(x\). We can now take both endpoint limits of \emph{one and the same wave}.
+\[
+ \begin{array}{ll}
+ \text{On Euler's clock, near zero}& W=xz=-\tfrac12+\ii x\ \longrightarrow-\tfrac12.\\[2pt]
+ \text{On the spring's clock, far away}& z=-1/(2x)+\ii\ \longrightarrow\ii.
+ \end{array}
+\]
+Here is the journey the two limiting equations made us suspect. At the left end the power law records how the wave's height changes with each doubling of radius. At the right end the envelope varies so little over a turn that the wave looks locally like a pure rotation. The rotation was there even at the left end. It is the relative importance of what we measure that changes.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=.68cm,y=.91cm,>=Stealth,font=\small]
+ \draw[->,pencil] (.23,0)--(14.1,0) node[right] {$x$};
+ \draw[->,pencil] (.4,-1.46)--(.4,1.56) node[above] {height};
+ \draw[ochre,densely dashed,domain=.48:13.8,samples=110] plot (\x,{1/sqrt(\x)});
+ \draw[ochre,densely dashed,domain=.48:13.8,samples=110] plot (\x,{-1/sqrt(\x)});
+ \draw[river,very thick,domain=.48:13.8,samples=220] plot (\x,{cos(deg(\x))/sqrt(\x)});
+ \foreach \p/\lab in {3.1416/\pi,6.2832/2\pi,9.4248/3\pi,12.5664/4\pi}{
+  \draw[pencil] (\p,-.06)--(\p,.06);
+  \node[below,fill=white,inner sep=1.2pt] at (\p,-.09) {$\lab$};
+ }
+\end{tikzpicture}
+\caption{Watch the tip of the half-order Bessel wave from the side. Its horizontal projection is \(\cos(x)/\sqrt{x}\) (solid). The dashed envelope has height \(1/\sqrt{x}\) above and below the axis. The spacing of the turns stays the same as their size falls.}\label{fig:wave}
+\end{figure}
+
+Why was half-order so obliging? For most orders there is no such elementary expression for the journey. Something cancels at exactly \(1/2\). Finding that cancellation will also explain a number that keeps turning up in radial equations.
+
+\section{The Schwarzian derivative and the Langer quarter}\label{sec:schwarz}
+\subsection{First remove the changing height}
+Imagine superimposing a pure oscillation on a changing envelope. If the envelope is known, we can divide it out and see the oscillation more clearly. Assume \(P\) is differentiable here. Write \(y=\mu h\), where we will choose \(\mu\). Substitution into~\eqref{eq:usual} gives
+\[
+ \mu h''+(2\mu'+P\mu)h'+(\mu''+P\mu'+Q\mu)h=0 .
+\]
+Choose \(\mu'/\mu=-P/2\). This is the recovery formula again, so we can take
+\(\mu=\exp(-\frac12\int P\,\dif x)\) on our interval. The coefficient of \(h'\) vanishes. This leaves an equation in what is called \emph{normal form},
+\begin{equation}\label{eq:normal}
+ h''+q(x)h=0,\qquad q=Q-\frac{P'}{2}-\frac{P^2}{4}.
+\end{equation}
+The word \emph{potential} below just means this remaining coefficient \(q\). For Bessel take \(P=1/x,\ Q=1-\nu^2/x^2\). Then
+\[
+ \mu=x^{-1/2},\qquad q=1+\frac{1/4-\nu^2}{x^2}.
+\]
+At \(\nu=1/2\) the numerator \(1/4-\nu^2\) is zero. The rescaled wave \(h=\sqrt{x}\,y\) satisfies the spring equation \(h''+h=0\) everywhere on \(x>0\). That is where~\eqref{eq:half} came from. We can now derive it in the same direction as the classroom exponential.
+
+\subsection{What the Schwarzian measures}
+There is a second way to alter the look of a wave. Keep the same curve, but change the horizontal ruler along which its oscillations are counted. Equal steps of \(s=\log x\) correspond to larger and larger steps of \(x\). A second derivative is sensitive to that changing spacing.
+
+Let \(s=s(x)\) be a three-times differentiable increasing ruler with \(s'>0\). Write
+\(h(x)=\rho(x)H(s(x))\). Twice applying the product and chain rules gives
+\[
+ h''=\rho(s')^2 H_{ss}+(2\rho's'+\rho s'')H_s+\rho''H.
+\]
+Here the subscripts mean differentiation with respect to \(s\). We have met this choice once already. Make the middle coefficient disappear. The choice \(\rho=(s')^{-1/2}\) works, since \(\rho'/\rho=-s''/(2s')\). Differentiate that last equality once and add its square to get
+\[
+ \frac{\rho''}{\rho}=-\frac12\left[\frac{s'''}{s'}-\frac32
+             \left(\frac{s''}{s'}\right)^2\right].
+\]
+The expression in brackets has a name, the \emph{Schwarzian derivative} \(\{s,x\}\). All three derivatives act on the new ruler. If \(s=2x+1\), the last two are zero, and the Schwarzian vanishes. A uniform change of scale costs nothing extra. With a nonuniform ruler, the bracket reappears in the potential of the new equation~\cite{NISTChange}.
+\begin{equation}\label{eq:pull}
+ H_{ss}+\widetilde q(s)H=0,\qquad
+ \widetilde q(s(x))=\frac{q(x)-\frac12\{s,x\}}{(s'(x))^2}.
+\end{equation}
+
+\subsection{Where Langer's quarter comes from}
+For Euler we used \(s=\log t,\ t=1+u>0\). The whole calculation takes three derivatives. With respect to \(u\), these are \(1/t,-1/t^2,2/t^3\). Thus
+\[
+ \tfrac12\{s,u\}
+  =\tfrac12\left(\frac{2}{t^2}-\frac{3}{2t^2}\right)
+  =\frac{1}{4t^2}.
+\]
+This is the quarter-term associated with Langer's logarithmic radial transformation~\cite{Langer1937}. To see it do some work, apply~\eqref{eq:normal} to our Euler equation. Its potential is \(q=(1/4-2\ell^2)/t^2\). In~\eqref{eq:pull} the two quarters cancel, and division by \((s')^2=1/t^2\) leaves \(\widetilde q=-2\ell^2\). We are back at the constant-coefficient equation we obtained directly. The extra quarter is the exact cost of changing the ruler while keeping a second-order equation in normal form.
+
+\section{When can a single clock do the job?}\label{sec:autonomy}
+There is now a way to test a suggested clock before solving the transformed equation. We want \(\widetilde q\) to be a constant, say \(c\). Multiply~\eqref{eq:pull} by \((s')^2\) and rearrange. The proposed clock works exactly when
+\begin{equation}\label{eq:test}
+ q(x)=c\,(s'(x))^2+\tfrac12\{s,x\}.
+\end{equation}
+If the equality holds throughout the interval, our new equation is \(H_{ss}+cH=0\) throughout that interval. It is the spring, the pair of exponentials, or, when \(c=0\), the straight line.
+
+This suggests the working hierarchy of the original question. At \emph{level zero} the usual clock already gives a constant coefficient after the envelope is removed. At \emph{level one} a clock read from the coefficients, such as \(\log t\) for Euler, passes the test over the whole interval of interest. At \emph{level two} the simple clocks tried so far explain different ends. Order-two Bessel on \(x>0\) is a useful example. On the \(x\) clock its potential is \(1-15/(4x^2)\). On the logarithmic clock it is \(e^{2s}-4\). Each settles to a constant at one end. Neither is constant throughout.
+
+These levels record a calculation and a choice of clocks. Change the order to \(1/2\) and Bessel drops straight to level zero. There is a further reason to specify the allowable clocks. On a real interval where two independent real solutions \(h_1,h_2\) of the normal equation are known and \(h_2\ne0\), take \(s=h_1/h_2\). Every solution then has the form \(h=h_2(As+B)\). Relative to that envelope and coordinate the shape has become a line, but constructing the ruler already required solving the problem. What I want is a ruler we can read from the equation we started with.
+
+\section{The unification table}\label{sec:table}
+Return to the last column of the opening table. This time start from equations whose solutions we may never have seen. Every row supplies \(P,Q\) for the \emph{same} rule \(z'=-z^2-Pz-Q\). Choose a row, choose the starting height and slope or the appropriate boundary data, and follow the resulting curve. In the Euler row \(t=1+u>0\). The other variable is \(x\), restricted wherever a denominator occurs.
+\begin{center}\small
+\begin{tabularx}{\linewidth}{@{}l l l Y@{}}
 \toprule
-Equation & Near origin & Near $\infty$ & Global? & Function \\
+Equation & \(P\) & \(Q\) & What to watch\\
 \midrule
-Const.\ coeff. & $z = \text{const}$ & $z = \text{same}$ & YES & Exponential \\
-Euler & $z = r/(1{+}u)$ & Same & YES & Power law \\
-Bessel & $z \approx n/x$ & $z \to \pm i$ & NO & $J_n$, $Y_n$ \\
-Airy & $z \to \pm i\sqrt{|x|}$ & $z \to \pm\sqrt{x}$ & NO & $\mathrm{Ai}$, $\mathrm{Bi}$ \\
-Hermite & $z \approx \pm i\sqrt{2n{+}1}$ & $z \approx -x$ & NO & $H_n$ \\
-Legendre & $z \approx c/(1{-}x)$ & $z \approx c/(1{+}x)$ & NO & $P_\ell$, $Q_\ell$ \\
+Constant & \(p\) & \(q_0\) & Two fixed rates give the distinct exponential modes.\\
+Oscillator & \(0\) & \(\omega^2\) & An imaginary rate rotates the arrow.\\
+Shifted Euler & \(1/t\) & \(-2\ell^2/t^2\) & Each doubling gives the same change of scale.\\
+Bessel & \(1/x\) & \(1-\nu^2/x^2\) & A power near the origin and outgoing rotation far away.\\
+Airy & \(0\) & \(-x\) & The curvature reverses its relation to height at zero.\\
+Hermite & \(-2x\) & \(2n\) & The polynomial and its Gaussian-weighted wave have different rates.\\
+Legendre & \(-2x/(1-x^2)\) & \(\ell(\ell+1)/(1-x^2)\) & A regular curve can have a pole in its slope chart.\\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{center}
 
-\medskip
+Look at the last two rows. The physicists' Hermite polynomial \(H_n\) has degree \(n\). Far from the origin its leading power gives \(H_n'/H_n\) a leading term \(n/x\) when \(n>0\). Multiply it by the Gaussian \(e^{-x^2/2}\) to obtain the familiar oscillator wavefunction. Its logarithmic derivative becomes \(-x+H_n'/H_n\) by the product rule. The distinction matters if we say how the wave behaves at infinity. For Legendre take \(\ell=1\). The polynomial \(y=x\) solves the equation. Its \(z=1/x\) has a pole at zero, even though both coefficients are regular there. Conversely, the coefficients in the table are singular at \(x=\pm1\) while this particular polynomial passes straight through both~\cite{NISTPoly}.
 
-Every ``special function'' in the table is, from the Riccati perspective, a smooth $\mathbb{C}$-trajectory connecting two asymptotic regimes. What makes it ``special'' is not any intrinsic mathematical complexity. It is the incompatibility of the two coordinate patches: the fact that no single coordinate change $s(x)$ can make both regimes autonomous simultaneously. This is an organising geometric picture, not a classification theorem; the examples do not by themselves establish that \emph{every} special function admits this description.
+Where does the table end? Given \(Ay''+By'+Cy=0\), enter \(P=B/A,\ Q=C/A\) wherever \(A\ne0\). For Gauss's hypergeometric equation the triple \((A,B,C)\) is \((x(1-x),\,c-(a+b+1)x,\,-ab)\). For Kummer's it is \((x,\,b-x,\,-a)\)~\cite{NISTHyper}. The same two divisions work in both cases, and both are checked in the Lean companion. This is the precise reach of the unification. On a zero-free interval every scalar homogeneous linear second-order equation has this representation, and Section~3 tells us how to return to its solutions. What singles out each family is now visible in its coefficients. What singles out a named member still lives in its boundary data.
 
-%------------------------------------------------------------
-\section{Connection to WKB}
-%------------------------------------------------------------
+\section{Following a moving root with WKB}
+Airy's frozen roots did not solve its equation. That failed test contained a clue. On \(x>0\) we tried \(z=-\sqrt{x}\). Its derivative has magnitude \(1/(2\sqrt{x})\), while the terms \(x\) and \(z^2\) being balanced each have size \(x\). As \(x\) grows, the neglected motion is small in comparison. Could we keep just enough of it to find out how the envelope changes?
 
-The WKB approximation $y \approx |p(x)|^{-1/2}\cdot\exp(\pm\int p(x)\,dx)$ is traditionally presented as a separate technique with its own validity conditions~\cite{Olver1974, BenOrszag1978}. In the Riccati framework, WKB is not a separate technique. It is the natural consequence of using instantaneous fixed points
+Write a normal-form equation as \(h''=p(x)^2h\) on an interval with \(p>0\). Its slope obeys \(z'=p^2-z^2\). Try following one root with a small adjustment, \(z=\sigma p+\delta\), where \(\sigma=1\) or \(-1\). Substitution gives the exact equation
 \[
-z^*(x) = \frac{-P(x) \pm \sqrt{P(x)^2 - 4Q(x)}}{2}
+ \sigma p'+\delta'=-2\sigma p\,\delta-\delta^2.
 \]
-in a non-autonomous Riccati equation. The WKB validity condition $|dz^*/dx| \ll |z^*|^2$ (``the fixed point moves slowly compared to the flow speed'') is precisely the condition for the instantaneous fixed point to be a good approximation to the actual trajectory.
-
-On the Euler equation, the Riccati in log coordinates is autonomous, so WKB is exact. This is not a special property of WKB. It is the statement that the fixed point of an autonomous equation does not move.
-
-%------------------------------------------------------------
-\section{Extension to PDEs}
-%------------------------------------------------------------
-
-A separable PDE decomposes into one ODE per coordinate. Each ODE becomes a Riccati equation. The full PDE solution is the product of $\exp(\int z_i^*\,dx_i)$ from each sector.
-
-\textbf{Example:} The wave equation $\Box\psi = 0$ on the cone metric $ds^2 = 2\,du^2 + (1+u)^2\,dv'^2$ with $\psi = F(u)\cdot e^{i\ell v'}$ separates into:
-
-$v'$-sector: trivial, $z_v = i\ell$ (constant fixed point).
-
-$u$-sector: the Euler Riccati $dz_s/ds = -z_s^2 + 2\ell^2$, fixed points $z_s = \pm\ell\sqrt{2}$.
-
-The separation constant~$\ell$ is the coupling between the two Riccati flows. It appears in both sectors because it is the shared parameter that binds the transverse oscillation to the radial dynamics.
-
-%------------------------------------------------------------
-\section{Coupled coordinates and the dissolution of Level~2}\label{sec:coupled}
-%------------------------------------------------------------
-
-The classification of Observation~\ref{obs:classification} raises a natural question: is the two-patch incompatibility that creates special functions an intrinsic property of the equation, or can it depend on the relationship between coordinates?
-
-We give an example showing that it can depend on the relationship. On a specific 2-manifold whose coordinates are genuinely coupled (the radial coordinate is not independent of the angular coordinate), the two-patch structure dissolves entirely. This is an existence result on a particular metric under a resonance condition, not a general theorem about all coupled-coordinate systems.
-
-\subsection{Setup: independent vs.\ coupled coordinates}
-
-Consider the Helmholtz equation $\nabla^2\psi + k^2\psi = 0$ on a 2-manifold with separation $\psi = R(r)\cdot e^{in\theta}$.
-
-\textbf{Case~1: Independent coordinates.} On the flat plane with metric $ds^2 = dr^2 + r^2\,d\theta^2$, the coordinates $r$ and $\theta$ are independent. Separation yields the Bessel equation:
+If \(p\) changes slowly over the local length \(1/p\), keep the first correction. Balancing \(\sigma p'\) against \(-2\sigma p\,\delta\) gives \(\delta\approx-p'/(2p)\). The recovery integral now gives
 \[
-R'' + \frac{1}{r}R' + \left(k^2 - \frac{n^2}{r^2}\right)R = 0.
+ h(x)\ \approx\ \frac{C}{\sqrt{p(x)}}\exp\!\left(\sigma\int^x p(t)\,\dif t\right).
 \]
-The Riccati fixed points are
+This is the first WKB approximation, named for Wentzel, Kramers and Brillouin. On an oscillatory interval \(h''+p^2h=0\), the corresponding exponential carries \(\sigma\ii\int p\). The factor \(1/\sqrt p\) is what we gain by letting the root move. One can test the approximation by differentiating it in the original equation. For \(h=Ae^{\sigma\int p}\) with \(A=p^{-1/2}\), the residual \(h''-p^2h\) divided by \(h\) is exactly \(A''/A\). In particular we need that remainder small relative to \(p^2\) for this local balance to be accurate. Near a turning point \(p=0\) the formula itself tells us where to stop using it~\cite{BenOrszag1978,Olver1974}.
+
+So far the equations have arrived already written on the page. Bessel's two regimes are especially striking once we see where its two competing terms come from.
+
+\section{How a second variable brings Bessel into the room}\label{sec:pde}
+Pick a point on a circular drumskin. Radius tells us how far it is from the centre. Angle tells us where it lies around the circle. A \emph{partial differential equation} tracks changes in both measurements. A partial derivative with respect to radius means moving outwards while holding angle fixed.
+
+Consider a wave pattern \(\psi(r,\theta)\) on the plane satisfying the Helmholtz equation \(\Delta\psi+k^2\psi=0\). The number \(k\) sets a spatial frequency. In polar coordinates the Laplacian \(\Delta\), which measures how a function bends in space, has the form
 \[
-z^* = \frac{-1 \pm \sqrt{4n^2 - 4k^2 r^2 + 1}}{2r}.
+ \Delta\psi=\frac{\partial^2\psi}{\partial r^2}
+  +\frac{1}{r}\frac{\partial\psi}{\partial r}
+  +\frac{1}{r^2}\frac{\partial^2\psi}{\partial\theta^2}.
 \]
-Near $r = 0$: $z^* \sim \pm n/r$ (real, power law). As $r \to \infty$: $z^* \to \pm ik$ (imaginary, plane wave). The imaginary part changes character. Two regimes. Level~2.
-
-\textbf{Case~2: Coupled coordinates.} Consider instead a 2-manifold with the off-diagonal metric
+Choose an angular pattern \(e^{\ii n\theta}\) and give it a radial amplitude \(R(r)\). This is \emph{separation of variables}. Going once round the circle must bring us back to the same value, so \(n\) is an integer. Each angular derivative contributes \(\ii n\). Cancelling the common angular factor leaves
 \[
-ds^2 = \bigl(4\pi^2 m^2(1{+}u)^2 + 2\bigr)\,du^2 + 4\pi m(1{+}u)^2\,du\,dv + (1{+}u)^2\,dv^2,
+ R''+\frac1r R'+\left(k^2-\frac{n^2}{r^2}\right)R=0.
 \]
-where $m \in \mathbb{Z}^+$ is a coupling parameter. This metric has determinant $\det(g) = 2(1{+}u)^2$ and inverse metric components
+There they are. The \(n^2/r^2\) term remembers how many turns the phase made on a circle of radius \(r\). The \(k^2\) term remembers the wavelength. For \(k\ne0\), rescale to \(x=|k|r\) to obtain the Bessel equation we have been following. Set \(k=0\), and Euler's equation is left. This distinction will decide what happens in the last example.
+
+\section{Following the wave around a cone}\label{sec:coupled}
+\subsection{Two people looking at the same surface}
+Draw a line from near the tip of a cone towards its rim. A second observer draws a line that winds round the cone on the way out. Both can label a point by its distance outwards and an angle. What they call “keeping the angle fixed” differs. How much of the wave that the second observer sees comes from the winding of the line?
+
+Let \(t=1+u>0\), and let \(v\) be an angle with period \(2\pi\). A \emph{metric} is the rule that turns small coordinate changes into a squared distance. In the winding coordinates take
+\begin{equation}\label{eq:metric}
+ \dif L^2=2\,\dif u^2+t^2(\dif v+2\pi m\,\dif u)^2,\qquad m\in\mathbb Z_{>0}.
+\end{equation}
+You can already see the twist. Even with \(\dif v=0\), a step in \(u\) contributes \(2\pi m\,\dif u\) to the angular bracket. Set \(\theta=v+2\pi m u\). The same ruler now reads \(\dif L^2=2\,\dif u^2+t^2\dif\theta^2\). With distance coordinate \(\sqrt2\,t\), the circumference at radius \(\sqrt2\,t\) is \(2\pi t\). That is a cone.
+
+\subsection{Read the wave in the unwound coordinates}
+A circle here has circumference proportional to \(t\). For this metric the radial part of the Laplacian is \((2t)^{-1}\partial_u(t\,\partial_u)\), and the angular part is \(t^{-2}\partial_\theta^2\). Think of the factor \(t\) as the growing circumference across which radial change is spread. Put \(\psi=F(u)e^{\ii\ell\theta}\) into \(\Delta\psi+k^2\psi=0\). The integer \(\ell\) counts the angular turns. After multiplying by two the radial equation is
+\begin{equation}\label{eq:cone}
+ F''+\frac{1}{t}F'+\left(2k^2-\frac{2\ell^2}{t^2}\right)F=0.
+\end{equation}
+First take the \emph{harmonic} case \(k=0\). We have seen this exact equation. On \(s=\log t\) it becomes \(F_{ss}=2\ell^2F\). For \(\ell\ne0\) its two modes are \(t^r\) with \(r=\pm\sqrt2\,\ell\). There was a reason to keep that fourth row on the first page.
+
+\subsection{Read the very same wave on the winding line}
+To see what the winding observer measures, put the two expressions for the angle back into the wave.
 \[
-g^{uu} = \tfrac{1}{2}, \quad g^{uv} = -\pi m, \quad g^{vv} = 2\pi^2 m^2 + (1{+}u)^{-2}.
+ F(u)e^{\ii\ell\theta}
+   =\underbrace{e^{2\pi\ii\ell m u}F(u)}_{f(u)}\,e^{\ii\ell v}.
 \]
-The off-diagonal term $g^{uv} = -\pi m$ couples the two coordinates: a step in $u$ drags $v$, and vice versa.
+Write \(\kappa=2\pi\ii\ell m\). Wherever the wave is nonzero,
+\(f'/f=\kappa+F'/F\). In the harmonic case this makes the two answers
+\begin{equation}\label{eq:coneans}
+ z=\kappa+\frac{r}{t},\qquad
+ f(u)=e^{\kappa u}(1+u)^r,\qquad r=\pm\sqrt2\,\ell .
+\end{equation}
+A power law times a plane wave, globally on \(u>-1\). The power is what the unwound observer measures. Each unit of \(u\) makes the winding observer turn through \(2\pi m\) extra radians, crossing \(\ell\) angular cycles per full turn. That is the constant phase rate \(2\pi\ell m\) in the imaginary part of \(z\). When \(\ell=0\), there is no angular winding in the wave and the independent harmonic modes are \(1,\log t\).
 
-\subsection{The Laplace--Beltrami equation}
-
-Computing the Laplace--Beltrami operator $\Box_M\psi = 0$ on this metric with $\psi = f(u)\,e^{i\ell v}$, multiplying through by $(1{+}u)^2$, and reducing to standard form $f'' + P(u)\,f' + Q(u)\,f = 0$ gives:
+There is a trap here that caught me in the original calculation. For \(k=0\) the equation for \(f\) has coefficients
 \[
-P(u) = \frac{-4i\pi\ell m(1{+}u) + 1}{1+u}, \quad
-Q(u) = \frac{-2\ell\bigl(2\pi^2\ell m^2(1{+}u)^2 + \ell + i\pi m(1{+}u)\bigr)}{(1+u)^2}.
+ P_f=t^{-1}-2\kappa,\qquad Q_f=\kappa^2-\kappa/t-2\ell^2/t^2 .
 \]
-The coefficients are complex-valued because of the off-diagonal coupling $g^{uv} = -\pi m$.
+Substitute \(z=\kappa+r/t\) into the \emph{frozen quadratic}. The result is \((r^2+r-2\ell^2)/t^2\). If \(\ell=m=1\), that quadratic offers \(r=1\). But the slope \(\kappa+1/t\) has derivative \(-1/t^2\). At \(u=0\) the right-hand side of the flow is zero while the left is \(-1\). The wave fails the very first step of its journey. Put the derivative back in before solving, and the residual becomes \((r^2-2\ell^2)/t^2\), giving exactly~\eqref{eq:coneans}. The frozen roots do get one feature right on \(\ell=m\). Their imaginary part is the constant \(2\pi m^2\). The power needs the derivative.
 
-\subsection{Riccati fixed points}
-
-The Riccati fixed points $z^2 + Pz + Q = 0$ on the resonant mode $\ell = m$ are:
+\subsection{Which part of the answer belongs to the coordinates?}
+Keep \(k\) fixed when comparing the two observers. Multiplying \(F\) by \(e^{\kappa u}\) changes coefficients \(P,Q\) to \(P-2\kappa,\ Q-\kappa P+\kappa^2\). Indeed, direct differentiation gives
 \[
-z^*_\pm = \frac{4i\pi m^2(1{+}u) \pm \sqrt{8m^2 + 1} - 1}{2(1+u)}.
+ f''+(P-2\kappa)f'+(Q-\kappa P+\kappa^2)f
+   =e^{\kappa u}(F''+PF'+QF).
 \]
-Separating into real and imaginary parts:
-\begin{align}
-\operatorname{Re}(z^*_\pm) &= \frac{\pm\sqrt{8m^2 + 1} - 1}{2(1+u)}, \label{eq:re-fp}\\
-\operatorname{Im}(z^*_\pm) &= 2\pi m^2. \label{eq:im-fp}
-\end{align}
+So at \(k=0\) both observers find Euler's powers. At \(k\ne0\) both retain the term \(2k^2\). Put \(x=\sqrt2\,|k|t\) in~\eqref{eq:cone} and the result is Bessel's equation of order \(\sqrt2\,|\ell|\). The observer on the winding line sees this same radial solution multiplied by the phase above. The winding explains the extra rotation exactly. The competition between wavelength and angular scale survives the change of coordinates. That distinction would have been easy to miss by looking only at the names of the functions.
 
-\begin{theorem}[Constant Imaginary Part]\label{thm:const-im}
-The imaginary parts of both Riccati fixed points are identically $2\pi m^2$, independent of~$u$.
-\end{theorem}
-
-\begin{proof}
-Equation~\eqref{eq:im-fp} follows by direct computation. The term $4i\pi m^2(1{+}u)$ in the numerator divides by $2(1{+}u)$ to give $2i\pi m^2$, with no residual $u$-dependence. The discriminant $\sqrt{8m^2 + 1}$ is real (since $m \in \mathbb{Z}^+$), so it contributes only to the real part.
-\end{proof}
-
-\subsection{Structural comparison}
-
-The key contrast is now visible:
-\begin{center}
-\begin{tabular}{lll}
-\toprule
-& $\operatorname{Re}(z^*)$ & $\operatorname{Im}(z^*)$ \\
-\midrule
-Bessel (independent coords) & $\sim n/r \to 0$ & $0 \to \pm 1$ (changes) \\
-Coupled metric & $c/(1{+}u)$ & $2\pi m^2$ (constant) \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-In the Bessel case, the imaginary part of $z^*$ transitions from $0$ (near origin) to $\pm i$ (at infinity). This transition between real and imaginary regimes is precisely what makes the equation Level~2: the power-law regime and the plane-wave regime require different autonomising coordinates.
-
-On the coupled metric, the imaginary part is constant everywhere. The oscillatory behaviour does not need to emerge; it is present at every~$u$ via the off-diagonal coupling $g^{uv} = -\pi m$. The real part has the familiar $1/(1{+}u)$ power-law structure, autonomisable by $s = \ln(1{+}u)$. One coordinate suffices. Level~1.
-
-\subsection{The mechanism}
-
-The off-diagonal coupling $g^{uv} = -\pi m$ injects a constant imaginary contribution into the Riccati coefficients $P(u)$ and $Q(u)$. This propagates through the quadratic formula into the fixed points, giving every fixed point a $u$-independent imaginary part (for related work connecting the Schwarzian derivative to Riccati equations on the complex plane, see~\cite{Carillo2024, Osgood1998}). There is no ``infinity regime'' for the flow to transition to, because the plane-wave phase is already present at every point.
-
-In the language of the autonomy classification: the coupled metric has only one regime (power-law-with-constant-phase), not two (power-law transitioning to plane-wave). The special function that would normally interpolate between two regimes is unnecessary. The solution is elementary:
-\[
-f(u) = (1+u)^{\pm\sqrt{8m^2+1}/2 \;-\; 1/2} \cdot e^{2i\pi m^2 u}.
-\]
-A power law times a plane wave, globally.
-
-\subsection{Cross-check: the diagonal frame}
-
-The coordinate change $v' = v + 2\pi m\,u$ diagonalises the metric to $ds^2 = 2\,du^2 + (1{+}u)^2\,dv'^2$, which is a flat cone. The wave equation becomes Euler's ODE with solutions $(1{+}u)^{\pm\ell\sqrt{2}}$. The Riccati fixed points in this frame are purely real: $z^* = (\pm\sqrt{8\ell^2 + 1} - 1)/(2(1{+}u))$, confirming Level~1.
-
-The two frames are consistent: the constant imaginary part $2\pi m^2$ in the original frame is exactly the phase contribution that the coordinate change $v' = v + 2\pi m\,u$ absorbs. In one frame the coupling is visible in the fixed points; in the other it is gauged away. The classification is the same either way.
-
-\subsection{Interpretation}
-
-The result admits a clean geometric reading. On the flat plane, $r$ and $\theta$ are independent coordinates. Separating the Helmholtz equation discards all angular information from the radial ODE. The Bessel function is the cost of that discarding: the smooth trajectory that interpolates between the power-law regime (where $\theta$ is locally irrelevant) and the plane-wave regime (where $\theta$ has been entirely forgotten).
-
-On the coupled metric, the coordinates are not independent: the off-diagonal term means a step in~$u$ necessarily involves a step in~$v$. The angular information is never discarded, because it was never separable in the first place. The ``plane wave'' is not a regime to transition to; it is already present at every point via the metric coupling.
-
-Special functions, in this example, are the scar left by separating coupled coordinates. When the coordinates remain coupled, no scar forms. Whether this phenomenon extends beyond the specific metric studied here, and whether all Level~2 behaviour can be attributed to coordinate separation, remains an open question. The example suggests that the special function zoo may be a consequence of a specific geometric choice (independent coordinates) rather than an intrinsic property of the underlying equations.
-
-%------------------------------------------------------------
 \section{Where this doesn't help}
-%------------------------------------------------------------
+Suppose I hand you Bessel's equation and ask for the displacement of a particular drum at its rim. The slope equation alone cannot tell you which wave was excited, its size, or which condition the rim imposes. The same missing height that made \(e^x\) and \(3e^x\) indistinguishable on page one still has to come from somewhere. Boundary conditions can also couple the behaviour at opposite ends of an interval.
 
-The Riccati viewpoint is not universally better than ansatzes. It is differently shaped, and that shape fits some problems and not others.
+A second limitation is more subtle. A fixed point gives an exponential immediately, and a known Riccati trajectory gives a solution by one integral. Finding that trajectory for a new choice of coefficients can be as hard as finding the original special function. For the real Airy solution there are infinitely many zero crossings on the negative axis. Switching charts lets us continue through any ordinary crossing. It does not tell us in advance where the next crossing occurs. Those locations, the orthogonality of families and their behaviour on continuing the independent variable into the complex plane are distinct questions.
 
-\textbf{Nonlinear ODEs.} The transformation $z = y'/y$ works because the original ODE is linear. For nonlinear equations, the resulting Riccati equation is more complicated and may not be easier to analyse.
+\section{Putting it to the test}\label{sec:numerical}
+\subsection{What the computer algebra system does}
+A calculator can make the first move much as a reader would. Its three input boxes hold \(A,B,C\), the coefficients of \(Ay''+By'+Cy=0\). Enter \(1,-3,2\). It returns the independent modes \(e^{2x},e^x\). Enter \(x^2,x,x^2-4\). It recognises Bessel of order two and returns
+\[
+ z'=-z^2-z/x-1+4/x^2 .
+\]
+The first answer supplies a basis, meaning two solutions whose linear combinations fill the solution space. The second supplies an exact reduction on a regular interval with \(y\ne0\). There is no boundary condition in those three input boxes to choose an incoming or outgoing wave. The cone operation takes \(\ell,m\) and returns the two harmonic modes, including the repeated case \(\ell=0\). To run the examples, see the \href{\caslink}{calculator instructions and supported inputs}.
 
-\textbf{Systems of ODEs.} For systems $\vec{y}'' + M(x)\vec{y} = 0$, the logarithmic derivative becomes a matrix $Z = Y'Y^{-1}$, yielding a matrix Riccati equation. The fixed-point analysis still applies, but the algebra is heavier.
-
-\textbf{Boundary value problems.} The Riccati viewpoint is naturally suited to initial value problems. For boundary value problems, one must find trajectories connecting two boundary conditions, which is a global problem rather than a local one.
-
-\textbf{Numerical computation.} The Riccati equation $z' = -z^2 - Pz - Q$ is stiff near fixed points (the~$z^2$ term dominates), which can cause numerical difficulties. The value of the Riccati viewpoint is conceptual, not computational.
-
-%------------------------------------------------------------
-\section{Illustrative numerical verification}\label{sec:numerical}
-%------------------------------------------------------------
-
-The Riccati identities, asymptotic behaviours, and algebraic reductions in this paper are verified numerically against standard library implementations (SciPy's Bessel and Airy functions) and symbolically (SymPy).
-
-\textbf{Riccati verification (Bessel, $n = 2$):}
-
-\begin{center}
-\begin{tabular}{rrrrl}
+\subsection{A numerical view beyond half-order}
+Choose the outgoing order-two wave \(H^{(1)}_2\). Its elementary formula is no longer available to us. We can still measure the two parts of \(z=H'/H\). The real part is the fractional rate of change in length. An imaginary part approaching one means one radian of phase per unit of \(x\).
+\begin{center}\small
+\begin{tabular}{@{}r r r r@{}}
 \toprule
-$x$ & $\mathrm{Re}(z)$ & $\mathrm{Im}(z)$ & $|z' - \mathrm{RHS}|$ & Status \\
+\(x\)&\(\operatorname{Re}z\)&\(\operatorname{Im}z\)& Absolute residual\\
 \midrule
-1.0 & $-1.511$ & $0.233$ & $2.3 \times 10^{-7}$ & \checkmark \\
-2.0 & $-0.467$ & $0.629$ & $3.1 \times 10^{-8}$ & \checkmark \\
-5.0 & $-0.115$ & $0.927$ & $7.9 \times 10^{-10}$ & \checkmark \\
-10.0 & $-0.052$ & $0.981$ & $2.9 \times 10^{-9}$ & \checkmark \\
-20.0 & $-0.025$ & $0.995$ & $1.7 \times 10^{-8}$ & \checkmark \\
-40.0 & $-0.013$ & $0.999$ & $1.4 \times 10^{-9}$ & \checkmark \\
+1  & \(-1.51055\)&0.23252&\(2.01\times10^{-10}\)\\
+2  & \(-0.46692\)&0.62946&\(2.28\times10^{-11}\)\\
+5  & \(-0.11524\)&0.92704&\(6.75\times10^{-12}\)\\
+20 & \(-0.02523\)&0.99532&\(6.01\times10^{-12}\)\\
 \bottomrule
 \end{tabular}
 \end{center}
+To reproduce the last column, evaluate \(z=\texttt{h1vp}(2,x)/\texttt{hankel1}(2,x)\) with SciPy. Estimate \(z'\) by \((z(x+h)-z(x-h))/(2h)\) at \(h=10^{-5}\). Add \(z^2+z/x+1-4/x^2\) and take the absolute value, using the unrounded values throughout. A \emph{residual} is what is left when a proposed solution goes back into the equation. These are four pointwise checks. The general large-\(x\) asymptotic for outgoing real-order Hankel waves follows from the classical expansions~\cite{NISTBessel}.
 
-\textbf{Schwarzian verification:}
+\subsection{What Lean checks}
+Lean is a proof assistant. It checks a mathematical statement by following justified steps from its hypotheses. In the \href{\leanlink}{companion proof}, \(x\) is real and the solutions may be complex. Here are five places to start if you want to line up what you read with what the machine checked.
+\begin{center}\small
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+Theorem in the Lean file & Question it answers\\
+\midrule
+\texttt{same\_logD\_iff\_rescaling} & Can two nonvanishing curves have the same fractional rate throughout an interval and differ by anything other than scale?\\
+\texttt{half\_wave\_solves\_bessel} & Does our turning, shrinking wave satisfy the original second-order Bessel equation at every positive radius?\\
+\texttt{half\_wave\_connects} & Does that very wave have both endpoint limits in Section~\ref{sec:complex}?\\
+\texttt{schwarzian\_pullback}, \texttt{log\_langer} & What term enters on changing the ruler, and what does it equal for the logarithm?\\
+\texttt{phase\_gauge\_residual} & What happens to the whole radial equation when the winding phase is put back in?\\
+\bottomrule
+\end{tabularx}
+\end{center}
+The file also checks the interval recovery, the reciprocal chart, the named family equations and the test for the cone exponents. All forty public theorems compile with Lean 4.26.0 and the matching mathlib release. The half-order endpoint proof is exact. The numerical values above are a separate experiment on a different order.
 
-$\{\ln(1+u),\, u\} = 1/(2(1+u)^2)$. Therefore $\tfrac{1}{2}\{\ln(1+u),\, u\} = 1/(4(1+u)^2)$. This matches the Langer correction exactly. Verified symbolically in SymPy.
-
-\textbf{Coupled-coordinate verification (Theorem~\ref{thm:const-im}):} The Laplace--Beltrami equation, Riccati fixed points, and the constancy of $\operatorname{Im}(z^*)$ are all verified symbolically and numerically in the supplementary script.\footnote{The verification script \texttt{riccati\_complete.py} is available at \url{https://github.com/nickyazdani9/mathematical-physics}. Requires SciPy and SymPy.}
-
-%------------------------------------------------------------
 \section{Interpretation boundary}
-%------------------------------------------------------------
+Three kinds of statement have met on these pages. First are identities, such as~\eqref{eq:riccati} and~\eqref{eq:pull}, which can be run in either direction under their stated hypotheses. Second are statements about a \emph{particular} solution. For half-order we proved its connection from a single formula. For general outgoing Hankel waves or the decaying Airy function, their endpoint behaviour uses the classical results cited alongside them. Choosing which solution travels the road is part of the mathematics.
 
-This paper distinguishes three categories of result.
+The third kind is the picture one takes away. I find it useful to ask what the two ends of a special function would call a steady rate, and whether they would measure it with the same clock. That question organised the examples here. The table encompasses many more equations than our endpoint calculations. Extending the geometric picture to a new family still requires finding the regimes, choosing a solution and showing how it travels between them.
 
-\textbf{Derived:} The Riccati transformation (Theorem~\ref{thm:ode-to-riccati}), recovery of solutions (Theorem~\ref{thm:recovery}), the fixed-point characterisation for autonomous equations (Theorem~\ref{thm:fixed-pts}), the normal form reduction (Theorem~\ref{thm:normal-form}), the Schwarzian transformation rule (Theorem~\ref{thm:schwarzian}), the autonomy condition (Theorem~\ref{thm:autonomy}), and the constant imaginary part on the coupled metric (Theorem~\ref{thm:const-im}). These are proved.
-
-\textbf{Verified asymptotic analysis:} The two-regime structure of Bessel, Airy, Hermite, and Legendre equations; the smooth flow on~$\mathbb{C}$ connecting these regimes; the identification of the Langer correction as a Schwarzian term. These rest on standard asymptotic methods applied through the Riccati lens, verified numerically and symbolically.
-
-\textbf{Interpretive:} The suggestion that the Level~0/1/2 hierarchy organises the classical special functions; the claim that the two dominant autonomising coordinates $s = x$ and $s = \ln(x)$ suffice for the standard examples; the reading of special functions as ``scars'' of coordinate separation. These are geometric interpretations supported by examples, not proved classification theorems. Whether they extend to all equations with irregular singular points, or to the full hypergeometric family, remains open.
-
-\newpage
-%------------------------------------------------------------
 \section{Conclusion}
-%------------------------------------------------------------
+What I wanted to know on the first page was who had put the exponential on the board. In the classroom example it came from a rate that could stand still. On Euler's logarithmic clock the same calculation produced a power law. Once one more term entered Euler's equation, the two ends of the problem began answering in different languages. One counted doublings. The other counted turns.
 
-None of this is revolutionary. The Riccati substitution has been in the differential equations textbooks since Euler~\cite{Euler1762}. The Schwarzian derivative has been in the complex analysis textbooks since Cayley~\cite{Cayley1880}. The connection between WKB and Riccati fixed points is known to anyone who has worked through the semiclassical literature carefully~\cite{Olver1974, BenOrszag1978}. The observation that Bessel functions interpolate between power-law and oscillatory regimes is standard asymptotic analysis.
+My favourite moment in this calculation is that we can hold one wave in our hands and watch it do both. Double a small radius and its length changes by a factor of \(1/\sqrt2\). Walk one full turn far from the origin and its length barely changes at all. The whole way out its fractional rate is \(-1/(2x)+\ii\). And on the cone we can ask one question more. How much of the turning belongs to the wave, and how much to the line along which we walked? Undo the twist in the ruler, and we can account for every radian.
 
-What this paper is, honestly, is one person's attempt to build a unified geometric picture of ODE theory that doesn't start with a guess. The Riccati viewpoint (setting $z = y'/y$, watching the flow on~$\mathbb{C}$, finding fixed points) is, for me, a more natural way to think about what ``solving a differential equation'' means. The fact that it provides a unifying perspective on the classical special functions is a pleasant structural consequence, not the main point.
+I still do not like being asked to guess an exponential. I am quite happy to find one.
 
-From the Riccati perspective, the Bessel function $J_n(x)$ is a smooth trajectory on the complex plane, connecting a power-law regime $z \approx n/x$ to an oscillatory regime $z \approx i$. The Airy function $\mathrm{Ai}(x)$ is a smooth trajectory connecting an oscillatory regime $z \approx i\sqrt{|x|}$ to an exponential regime $z \approx -\sqrt{x}$. In every classical equation examined here, the special function interpolates between two asymptotic regimes whose autonomising coordinates are incompatible.
+\smallskip
+\noindent\textit{Companion paper.} \href{https://github.com/nickyazdani9-ux/mathematical-physics/tree/main/mathematics/contraction_integral}{\emph{The Contraction Integral}} approaches integration with a similar question about what the usual calculation lets us see.
 
-This does not, by itself, exhaust what special functions \emph{are}. Their analytic continuation structure, monodromy, orthogonality relations, representation-theoretic roles, and spectral properties are not addressed by the Riccati picture. The claim is narrower: from the viewpoint of the Riccati flow on~$\mathbb{C}$, these functions share a common geometric structure that is obscured by the traditional classification into separate families.
-
-In the examples studied, two autonomising coordinates dominate: the identity $s = x$ (plane waves) and the logarithm $s = \ln(x)$ (power laws). Whether this pair suffices for all second-order linear ODEs, or whether other autonomising coordinates arise in equations beyond the classical zoo, is an open question.
-
-The Langer $\tfrac{1}{4}$ correction is simply $\tfrac{1}{2}\{\ln x,\, x\} = 1/(4x^2)$. It is the Schwarzian derivative of the logarithmic coordinate change. It is the geometric cost of converting a power law into a plane wave. It appears in every equation with a regular singular point, always with the same value, for the same reason. It is not an error to be corrected. It is a coordinate cost to be acknowledged.
-
-The coupled-coordinate example of Section~\ref{sec:coupled} suggests, but does not prove in general, that the two-regime structure may not be intrinsic to the equations themselves, but rather a consequence of treating coupled coordinates as independent. On the specific metric studied there, the off-diagonal coupling eliminates the regime change entirely, and the solution is elementary. Whether this mechanism generalises to other coupled-coordinate settings is a question for future work.
-
-\bigskip
-
-\noindent\textit{The companion paper, ``The Contraction Integral: Integration via Level-Set Contraction'' (Yazdani, 2026), develops a similarly geometric approach to integration. The two papers share a philosophy: the standard machinery is correct, but the standard picture can be improved.}
-
-%------------------------------------------------------------
-\section*{Acknowledgments}
-%------------------------------------------------------------
-
-The author thanks the anonymous referees for their time and attention.
-
-\newpage
-
-%------------------------------------------------------------
-% References (amsplain style, alphabetical)
-%------------------------------------------------------------
 \begin{thebibliography}{99}
-
-\bibitem{AbSt1972}
-M.~Abramowitz and I.~A.~Stegun (eds.),
-\textit{Handbook of Mathematical Functions},
-National Bureau of Standards Applied Mathematics Series, vol.~55,
-Dover, New York, 1972.
-
-\bibitem{BenOrszag1978}
-C.~M.~Bender and S.~A.~Orszag,
-\textit{Advanced Mathematical Methods for Scientists and Engineers},
-McGraw-Hill, New York, 1978.
-
-\bibitem{Carillo2024}
-S.~Carillo, A.~Chichurin, G.~Filipuk, and F.~Zullo,
-Schwarzian derivative, Painlev\'e XXV--Ermakov equation, and B\"acklund transformations,
-\textit{Math.\ Nachr.} \textbf{297} (2024), no.~1, 83--101.
-
-\bibitem{Cayley1880}
-A.~Cayley,
-On the Schwarzian derivative and the polyhedral functions,
-\textit{Trans.\ Cambridge Philos.\ Soc.} \textbf{13} (1880), 5--68.
-
-\bibitem{CodLev1955}
-E.~A.~Coddington and N.~Levinson,
-\textit{Theory of Ordinary Differential Equations},
-McGraw-Hill, New York, 1955.
-
-\bibitem{Euler1762}
-L.~Euler,
-De integratione aequationum differentialium altiorum graduum,
-\textit{Miscellanea Taurinensia} \textbf{3} (1762--1765).
-
-\bibitem{Hille1997}
-E.~Hille,
-\textit{Ordinary Differential Equations in the Complex Domain},
-Dover, New York, 1997 (reprint of the 1976 Wiley original).
-
-\bibitem{Ince1956}
-E.~L.~Ince,
-\textit{Ordinary Differential Equations},
-Dover, New York, 1956 (reprint of the 1926 original).
-
-\bibitem{Langer1937}
-R.~E.~Langer,
-On the connection formulas and the solutions of the wave equation,
-\textit{Phys.\ Rev.} \textbf{51} (1937), no.~8, 669--676.
-
-\bibitem{Nehari1949}
-Z.~Nehari,
-The Schwarzian derivative and schlicht functions,
-\textit{Bull.\ Amer.\ Math.\ Soc.} \textbf{55} (1949), no.~6, 545--551.
-
-\bibitem{NIST2010}
-F.~W.~J.~Olver, D.~W.~Lozier, R.~F.~Boisvert, and C.~W.~Clark (eds.),
-\textit{NIST Handbook of Mathematical Functions},
-Cambridge University Press, 2010.
-
-\bibitem{Olver1974}
-F.~W.~J.~Olver,
-\textit{Asymptotics and Special Functions},
-Academic Press, New York, 1974 (reprinted by A\,K Peters, 1997).
-
-\bibitem{Osgood1998}
-B.~Osgood,
-Old and new on the Schwarzian derivative,
-in: \textit{Quasiconformal Mappings and Analysis} (Ann Arbor, MI, 1995),
-Springer, New York, 1998, pp.~275--308.
-
-\bibitem{Reid1972}
-W.~T.~Reid,
-\textit{Riccati Differential Equations},
-Mathematics in Science and Engineering, vol.~86,
-Academic Press, New York, 1972.
-
-\bibitem{Riccati1724}
-J.~F.~Riccati,
-Animadversiones in aequationes differentiales secundi gradus,
-\textit{Actorum Eruditorum, quae Lipsiae publicantur, Supplementa} \textbf{8}(II) (1724), 66--73.
-
-\bibitem{Watson1944}
-G.~N.~Watson,
-\textit{A Treatise on the Theory of Bessel Functions},
-2nd ed., Cambridge University Press, 1944.
-
-\bibitem{WhitWat1927}
-E.~T.~Whittaker and G.~N.~Watson,
-\textit{A Course of Modern Analysis},
-4th ed., Cambridge University Press, 1927.
-
+\bibitem{BenOrszag1978} C.~M.~Bender and S.~A.~Orszag, \emph{Advanced Mathematical Methods for Scientists and Engineers}, McGraw-Hill, 1978.
+\bibitem{CodLev1955} E.~A.~Coddington and N.~Levinson, \emph{Theory of Ordinary Differential Equations}, McGraw-Hill, 1955.
+\bibitem{Ince1956} E.~L.~Ince, \emph{Ordinary Differential Equations}, Dover, 1956.
+\bibitem{Langer1937} R.~E.~Langer, \href{https://doi.org/10.1103/PhysRev.51.669}{On the connection formulas and the solutions of the wave equation}, \emph{Physical Review} \textbf{51} (1937), 669--676.
+\bibitem{NISTChange} NIST Digital Library of Mathematical Functions, \href{https://dlmf.nist.gov/1.13}{\S1.13, differential equations and changes of variables}.
+\bibitem{NISTAiry} NIST Digital Library of Mathematical Functions, \href{https://dlmf.nist.gov/9.7}{\S9.7, Airy asymptotic expansions} and \href{https://dlmf.nist.gov/9.9}{\S9.9, zeros}.
+\bibitem{NISTBessel} NIST Digital Library of Mathematical Functions, \href{https://dlmf.nist.gov/10.5}{\S10.5, Wronskians}, \href{https://dlmf.nist.gov/10.7}{\S10.7, limiting forms}, \href{https://dlmf.nist.gov/10.16}{\S10.16, half-order formulas} and \href{https://dlmf.nist.gov/10.17}{\S10.17, large-argument expansions}.
+\bibitem{NISTPoly} NIST Digital Library of Mathematical Functions, \href{https://dlmf.nist.gov/18.8}{\S18.8, differential equations for the classical orthogonal polynomials}.
+\bibitem{NISTHyper} NIST Digital Library of Mathematical Functions, \href{https://dlmf.nist.gov/15.10}{\S15.10, Gauss's equation} and \href{https://dlmf.nist.gov/13.2}{\S13.2, Kummer's equation}.
+\bibitem{Olver1974} F.~W.~J.~Olver, \emph{Asymptotics and Special Functions}, Academic Press, 1974.
+\bibitem{Reid1972} W.~T.~Reid, \emph{Riccati Differential Equations}, Academic Press, 1972.
 \end{thebibliography}
-
 \end{document}
